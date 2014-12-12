@@ -1,0 +1,19 @@
+$NetBSD$
+
+--- hald/rule.h.orig	2008-05-07 23:24:09.000000000 +0000
++++ hald/rule.h
+@@ -30,6 +30,14 @@
+ #ifndef __RULE_H__
+ #define __RULE__H__
+ 
++#ifdef __QNXNTO__
++#include <sys/platform.h>
++#ifndef _U_INT32_T_DEFINED
++#define _U_INT32_T_DEFINED
++typedef _Uint32t        u_int32_t;
++#endif
++#endif
++
+ /* rule type to process */
+ typedef enum {
+ 	RULE_UNKNOWN,

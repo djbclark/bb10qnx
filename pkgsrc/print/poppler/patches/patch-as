@@ -1,0 +1,16 @@
+$NetBSD: patch-as,v 1.4 2013/07/04 13:13:55 wiz Exp $
+
+Use installed poppler library so we can have a separate poppler-cpp
+package.
+
+--- cpp/tests/Makefile.in.orig	2011-06-27 18:45:14.000000000 +0000
++++ cpp/tests/Makefile.in
+@@ -300,7 +300,7 @@ INCLUDES = \
+ 	-I$(top_srcdir)/cpp
+ 
+ LDADDS = \
+-	$(top_builddir)/poppler/libpoppler.la	\
++	$(prefix)/lib/libpoppler.la	\
+ 	$(top_builddir)/cpp/libpoppler-cpp.la
+ 
+ poppler_dump_SOURCES = \

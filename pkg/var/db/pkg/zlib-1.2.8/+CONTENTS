@@ -1,0 +1,32 @@
+@cwd /accounts/devuser/pkg
+@name zlib-1.2.8
+@comment $NetBSD: PLIST,v 1.3 2004/09/22 08:09:30 jlam Exp $
+include/zconf.h
+@comment MD5:88171b1c418ff817ae94e63075dc59ff
+include/zlib.h
+@comment MD5:64d8a5180bd54ff5452886e4cbb21e14
+lib/libz.la
+@comment MD5:4ce143e038323238ecbd25e2df9b3a86
+lib/libz.a
+@comment MD5:ed318a21fba2278c6cb395a2fda74bba
+lib/libz.so
+@comment Symlink:libz.so.1.0.2
+lib/libz.so.1
+@comment Symlink:libz.so.1.0.2
+lib/libz.so.1.0.2
+@comment MD5:8991beca821f6e4d997b317338833271
+man/man3/zlib.3
+@comment MD5:5451d4ae9aaae60f09d2ab5edfc27368
+@cwd /accounts/devuser/pkg
+@ignore
++COMMENT
+@ignore
++DESC
+@ignore
++BUILD_VERSION
+@ignore
++BUILD_INFO
+@ignore
++SIZE_PKG
+@ignore
++SIZE_ALL

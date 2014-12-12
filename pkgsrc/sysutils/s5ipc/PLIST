@@ -1,0 +1,7 @@
+lib/libs5ipc.a
+lib/libs5ipcS.a
+lib/libs5ipc.so
+lib/libs5ipc.so.1
+sbin/s5ipc
+include/sys/ipc.h
+include/sys/shm.h

@@ -1,0 +1,78 @@
+$NetBSD$
+
+They're checking for this stuff in libsocket.
+Just because libsocket is around doesn't mean
+libnsl is also.
+
+--- configure.orig	2005-08-27 11:31:37.000000000 -0500
++++ configure
+@@ -2728,7 +2728,9 @@ fi
+ echo "$as_me:$LINENO: result: $ac_cv_lib_socket_getaddrinfo" >&5
+ echo "${ECHO_T}$ac_cv_lib_socket_getaddrinfo" >&6
+ if test $ac_cv_lib_socket_getaddrinfo = yes; then
++    if test x"QNX" != "x`uname -s`"; then
+       LIBS="$LIBS -lsocket -lnsl"
++    fi
+     ac_cv_lib_inet6_getaddrinfo=no
+ 
+ else
+@@ -3124,7 +3126,9 @@ fi
+ echo "$as_me:$LINENO: result: $ac_cv_lib_socket_getnameinfo" >&5
+ echo "${ECHO_T}$ac_cv_lib_socket_getnameinfo" >&6
+ if test $ac_cv_lib_socket_getnameinfo = yes; then
++    if test x"QNX" != "x`uname -s`"; then
+       LIBS="$LIBS -lsocket -lnsl"
++    fi
+     ac_cv_lib_inet6_getnameinfo=no
+ 
+ else
+@@ -3520,7 +3524,9 @@ fi
+ echo "$as_me:$LINENO: result: $ac_cv_lib_socket_gethostbyname2" >&5
+ echo "${ECHO_T}$ac_cv_lib_socket_gethostbyname2" >&6
+ if test $ac_cv_lib_socket_gethostbyname2 = yes; then
++    if test x"QNX" != "x`uname -s`"; then
+       LIBS="$LIBS -lsocket -lnsl"
++    fi
+     ac_cv_lib_inet6_gethostbyname2=no
+ 
+ else
+@@ -3916,7 +3922,9 @@ fi
+ echo "$as_me:$LINENO: result: $ac_cv_lib_socket_getipnodebyname" >&5
+ echo "${ECHO_T}$ac_cv_lib_socket_getipnodebyname" >&6
+ if test $ac_cv_lib_socket_getipnodebyname = yes; then
++    if test x"QNX" != "x`uname -s`"; then
+       LIBS="$LIBS -lsocket -lnsl"
++    fi
+     ac_cv_lib_inet6_getipnodebyname=no
+ 
+ else
+@@ -4312,7 +4320,9 @@ fi
+ echo "$as_me:$LINENO: result: $ac_cv_lib_socket_getipnodebyaddr" >&5
+ echo "${ECHO_T}$ac_cv_lib_socket_getipnodebyaddr" >&6
+ if test $ac_cv_lib_socket_getipnodebyaddr = yes; then
++    if test x"QNX" != "x`uname -s`"; then
+       LIBS="$LIBS -lsocket -lnsl"
++    fi
+     ac_cv_lib_inet6_getipnodebyaddr=no
+ 
+ else
+@@ -4708,7 +4718,9 @@ fi
+ echo "$as_me:$LINENO: result: $ac_cv_lib_socket_inet_pton" >&5
+ echo "${ECHO_T}$ac_cv_lib_socket_inet_pton" >&6
+ if test $ac_cv_lib_socket_inet_pton = yes; then
++    if test x"QNX" != "x`uname -s`"; then
+       LIBS="$LIBS -lsocket -lnsl"
++    fi
+     ac_cv_lib_inet6_inet_pton=no
+ 
+ else
+@@ -5104,7 +5116,9 @@ fi
+ echo "$as_me:$LINENO: result: $ac_cv_lib_socket_inet_ntop" >&5
+ echo "${ECHO_T}$ac_cv_lib_socket_inet_ntop" >&6
+ if test $ac_cv_lib_socket_inet_ntop = yes; then
++    if test x"QNX" != "x`uname -s`"; then
+       LIBS="$LIBS -lsocket -lnsl"
++    fi
+     ac_cv_lib_inet6_inet_ntop=no
+ 
+ else

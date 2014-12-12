@@ -1,0 +1,34 @@
+$NetBSD: patch-ae,v 1.4 2013/10/14 06:51:02 adam Exp $
+
+--- src/rcs.c.orig	2005-09-28 15:25:59.000000000 +0000
++++ src/rcs.c
+@@ -3641,7 +3641,7 @@ expand_keywords (RCSNode *rcs, RCSVers *
+     char *locker;
+     char *srch, *srch_next;
+     size_t srch_len;
+-    const struct rcs_keyword *keywords;
++    struct rcs_keyword *keywords;
+ 
+     if (!config /* For `cvs init', config may not be set.  */
+ 	||expand == KFLAG_O || expand == KFLAG_B)
+@@ -3654,6 +3654,11 @@ expand_keywords (RCSNode *rcs, RCSVers *
+     if (!config->keywords) config->keywords = new_keywords ();
+     keywords = config->keywords;
+ 
++    if (RCS_citag != NULL) {
++	keywords[KEYWORD_LOCALID].string = RCS_citag;
++	keywords[KEYWORD_LOCALID].len = strlen(RCS_citag);
++    }
++
+     /* If we are using -kkvl, dig out the locker information if any.  */
+     locker = NULL;
+     if (expand == KFLAG_KVL)
+@@ -4434,7 +4439,7 @@ RCS_checkout (RCSNode *rcs, const char *
+ 	if (info != NULL)
+ 	{
+ 	    /* If the size of `devtype' changes, fix the sscanf call also */
+-	    char devtype[16];
++	    char devtype[16+1];
+ 
+ 	    if (sscanf (info->data, "%15s %lu",
+ 			devtype, &devnum_long) < 2)

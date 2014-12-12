@@ -1,0 +1,24 @@
+$NetBSD: patch-aa,v 1.1 2000/04/08 23:17:12 bad Exp $
+
+--- Makefile.orig	1999-04-12 16:02:20.000000000 -0400
++++ Makefile
+@@ -2,14 +2,15 @@
+ 
+ PROG=	mailwrapper
+ MAN=	mailwrapper.8 mailer.conf.5
+-SRCS=	fparseln.c mailwrapper.c
++SRCS=	mailwrapper.c
+ 
+ CPPFLAGS+=	-I. -Wall
++LIBS=	-lnbcompat
++
++$(PROG): $(OBJS)
++	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
+ 
+ BINDIR=	${PREFIX}/sbin
+ MANDIR=	${PREFIX}/man
+ 
+-MANINSTALL=	catinstall maninstall
+-MANZ=		1
+-
+ .include <bsd.prog.mk>

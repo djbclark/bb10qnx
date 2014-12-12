@@ -1,0 +1,6 @@
+$NetBSD: distinfo,v 1.26 2013/07/17 07:41:44 wiz Exp $
+
+SHA1 (pan-0.139.tar.bz2) = 01ea0361a6d81489888e6abb075fd552999c3c60
+RMD160 (pan-0.139.tar.bz2) = e0e2963b2d11b362201639ca755ad9ae43581c2f
+Size (pan-0.139.tar.bz2) = 1523907 bytes
+SHA1 (patch-pan_usenet-utils_mime-utils.cc) = fb3703e8e5ddd24b337b583e3f4348358a0098f5

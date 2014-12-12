@@ -1,0 +1,35 @@
+$NetBSD$
+
+--- configure.orig	2004-03-01 15:02:37.000000000 -0500
++++ configure
+@@ -4221,6 +4221,30 @@ _ACEOF
+ 
+     LIBNET_CONFIG_DEFINES="-DLIBNET_BSDISH_OS"
+     ;;
++nto-qnx*)
++    case "`uname -r`" in
++    [012345].*|6.[0123].*)
++        # good luck
++	;;
++    *)
++        # >= 6.4
++        cat >>confdefs.h <<\_ACEOF
++#define LIBNET_BSDISH_OS 1
++_ACEOF
++
++        cat >>confdefs.h <<\_ACEOF
++#define LIBNET_BSD_BYTE_SWAP 1
++_ACEOF
++
++        cat >>confdefs.h <<\_ACEOF
++#define HAVE_SOCKADDR_SA_LEN 1
++_ACEOF
++
++        LIBNET_CONFIG_DEFINES="-DLIBNET_BSDISH_OS -DLIBNET_BSD_BYTE_SWAP -DHAVE_SOCKADDR_SA_LEN"
++        LIBS="$LIBS -lsocket"
++	;;
++    esac
++    ;;
+ 
+ *bsdi*)
+     cat >>confdefs.h <<\_ACEOF

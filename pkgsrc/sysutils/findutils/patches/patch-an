@@ -1,0 +1,22 @@
+$NetBSD$
+
+do not redefine endgrent and endgrent in find/parser.c
+
+--- configure.orig	1994-11-04 15:47:50.000000000 +0100
++++ configure
+@@ -779,6 +780,15 @@ else
+   ISC=
+ fi
+ 
++echo $ac_n "checking for POSIX compatibilty on e.g. QNX""... $ac_c" 1>&4
++if test -f /usr/include/unistd.h &&
++  grep _POSIX_VERSION /usr/include/unistd.h  >/dev/null 2>&1
++then
++  echo "$ac_t""yes" 1>&4
++  cat >> confdefs.h <<\EOF
++#define _POSIX_SOURCE 1
++EOF
++fi
+ 
+ echo $ac_n "checking for -lsun""... $ac_c" 1>&4
+ if eval "test \"`echo '${'ac_cv_lib_sun'+set}'`\" = set"; then

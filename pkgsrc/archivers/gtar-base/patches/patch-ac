@@ -1,0 +1,28 @@
+$NetBSD$
+
+--- src/list.c.orig	2010-11-01 20:34:59.000000000 +0000
++++ src/list.c
+@@ -25,7 +25,9 @@
+ 
+ #include "common.h"
+ 
++#ifndef max
+ #define max(a, b) ((a) < (b) ? (b) : (a))
++#endif
+ 
+ union block *current_header;	/* points to current archive header */
+ enum archive_format current_format; /* recognized format */
+@@ -651,8 +653,13 @@ decode_header (union block *header, stru
+ 	case BLKTYPE:
+ 	case CHRTYPE:
+ 	  stat_info->stat.st_rdev =
++#ifndef __QNXNTO__
+ 	    makedev (MAJOR_FROM_HEADER (header->header.devmajor),
+ 		     MINOR_FROM_HEADER (header->header.devminor));
++#else
++	    makedev (0, MAJOR_FROM_HEADER (header->header.devmajor),
++		     MINOR_FROM_HEADER (header->header.devminor));
++#endif
+ 	  break;
+ 
+ 	default:

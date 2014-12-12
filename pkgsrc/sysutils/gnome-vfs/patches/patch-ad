@@ -1,0 +1,18 @@
+$NetBSD$
+
+--- libgnomevfs/gnome-vfs-hal-mounts.c.orig	2010-02-09 12:16:14.000000000 +0000
++++ libgnomevfs/gnome-vfs-hal-mounts.c
+@@ -1031,8 +1031,13 @@ _hal_add_volume (GnomeVFSVolumeMonitorDa
+ 		
+ 		vol->priv->volume_type = GNOME_VFS_VOLUME_TYPE_MOUNTPOINT;
+ 		vol->priv->device_path = g_strdup (libhal_volume_get_device_file (hal_volume));
++#ifndef __QNXNTO__
+ 		vol->priv->unix_device = makedev (libhal_volume_get_device_major (hal_volume), 
+ 						  libhal_volume_get_device_minor (hal_volume));
++#else
++		vol->priv->unix_device = makedev (0, libhal_volume_get_device_major (hal_volume), 
++						  libhal_volume_get_device_minor (hal_volume));
++#endif
+ 
+ 		if (libhal_volume_disc_has_audio (hal_volume)) {
+ 			vol->priv->volume_type = GNOME_VFS_VOLUME_TYPE_VFS_MOUNT;

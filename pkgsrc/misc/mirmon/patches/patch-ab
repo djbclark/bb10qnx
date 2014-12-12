@@ -1,0 +1,50 @@
+$NetBSD: patch-ab,v 1.2 2013/07/21 10:44:03 shattered Exp $
+
+--- countries.list.orig	2013-06-10 21:28:01.000000000 +0000
++++ countries.list
+@@ -1,3 +1,4 @@
+ # based on : http://www.iso.org/iso/list-en1-semic-3.txt
++ac - ascension island
+ ad - Andorra
+ ae - United Arab Emirates
+@@ -40,7 +41,7 @@ ca - Canada
+ cc - Cocos (Keeling) Islands
+ cd - Congo
+ cf - Central African Republic
+-cg - Congo
++cg - Congo, Republic of
+ ch - Switzerland
+ ci - Côte d'Ivoire
+ ck - Cook Islands
+@@ -68,6 +69,7 @@ eh - Western Sahara
+ er - Eritrea
+ es - Spain
+ et - Ethiopia
++eu - European Union
+ fi - Finland
+ fj - Fiji
+ fk - Falkland Islands (Malvinas)
+@@ -207,6 +209,7 @@ so - Somalia
+ sr - Suriname
+ ss - South Sudan
+ st - Sao Tome and Principe
++su - Soviet Union
+ sv - El Salvador
+ sx - Sint Maarten (Dutch Part)
+ sy - Syrian Arab Republic
+@@ -222,6 +225,7 @@ tl - Timor-Leste
+ tm - Turkmenistan
+ tn - Tunisia
+ to - Tonga
++tp - East Timor
+ tr - Turkey
+ tt - Trinidad and Tobago
+ tv - Tuvalu
+@@ -245,6 +249,7 @@ wf - Wallis and Futuna
+ ws - Samoa
+ ye - Yemen
+ yt - Mayotte
++yu - Yugoslavia
+ za - South Africa
+ zm - Zambia
+ zw - Zimbabwe

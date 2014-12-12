@@ -1,0 +1,12 @@
+$NetBSD$
+
+--- autoconf/configure.in.orig	2002-10-20 02:55:30.000000000 -0400
++++ autoconf/configure.in
+@@ -37,6 +37,7 @@ AC_TYPE_PID_T
+ AC_TYPE_UID_T
+ 
+ AC_CHECK_LIB(util,openpty)
++AC_CHECK_LIB(socket,gethostbyname)
+ 
+ AC_CHECK_FUNCS(\
+ memset \

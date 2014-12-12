@@ -1,0 +1,5 @@
+$NetBSD: distinfo,v 1.9 2013/07/08 08:49:16 wiz Exp $
+
+SHA1 (icalendar-3.5.tar.gz) = d1bd47fbc48cd7c5d65b7c3beb989c003a7564e3
+RMD160 (icalendar-3.5.tar.gz) = 80fc4bb0c790fa88565881472ac214b870822de5
+Size (icalendar-3.5.tar.gz) = 59780 bytes

@@ -1,0 +1,9 @@
+@cwd /accounts/devuser/pkg
+@name bmake-20110606nb1
+@blddep bootstrap-mk-files-20130703
+@pkgdep bootstrap-mk-files-[0-9]*
+@comment $NetBSD: PLIST,v 1.2 2006/07/14 15:18:17 jlam Exp $
+bin/bmake
+@comment MD5:c67b768e82707cbde07bc6ac8a81777f
+man/man1/bmake.1
+@comment MD5:a7008b0f0150c76243374c92f50a5da0

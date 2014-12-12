@@ -1,0 +1,6 @@
+
+case ${STAGE} in
+POST-INSTALL)
+	ln -sf ${PREFIX}/lib/nss_winbind.so.0 /lib/dll/nss_winbind.so
+	;;
+esac

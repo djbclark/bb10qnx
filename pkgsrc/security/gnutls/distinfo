@@ -1,0 +1,13 @@
+$NetBSD: distinfo,v 1.95 2013/07/15 08:19:15 wiz Exp $
+
+SHA1 (gnutls-3.2.2.tar.xz) = ff3e1c25fade8e928700fa63f006265c7d9d1c08
+RMD160 (gnutls-3.2.2.tar.xz) = f91c1729982bea8f42444d5f381fa9045bdd24bf
+Size (gnutls-3.2.2.tar.xz) = 5164372 bytes
+SHA1 (patch-ae) = 71fbbeb43ac1689fca6fec7f8348d8534c1dc38a
+SHA1 (patch-doc_examples_ex-cxx.cpp) = f86976a28543891019890afaaf91b58b37011005
+SHA1 (patch-gl_stdio.in.h) = b5802da2cccddd6fab73bd39c49f7d62bef58464
+SHA1 (patch-gl_strerror-override.h) = 59d566745bce1afcccf3b2825d45ced67f85ae24
+SHA1 (patch-lib_Makefile.in) = 2121ed1e974cd71fe49c286f7e91135be12d915f
+SHA1 (patch-lib_nettle_egd.c) = b7e9769e8c620519c43ca7b7481a558e9d389c68
+SHA1 (patch-lib_system.c) = 540a8f98898a674133ceef7688731aa839e29322
+SHA1 (patch-src_tests.c) = 9e00bad57a32af3077bccc7580124faf613e53de

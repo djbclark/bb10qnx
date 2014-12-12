@@ -1,0 +1,23 @@
+$NetBSD$
+
+--- configure.ac.orig	2012-07-24 05:04:56.000000000 +0000
++++ configure.ac
+@@ -74,6 +74,10 @@ case $host_os in
+     IS_HURD="yes"
+     ;;
+ 
++  nto-qnx*)
++    IS_NTO="yes"
++    ;;
++
+   *)
+     AC_MSG_ERROR([Your operating system is not supported by the kbd driver.
+                   Contact xorg@lists.freedesktop.org if you are interested in
+@@ -84,6 +88,7 @@ AM_CONDITIONAL(LINUX, [test "x$IS_LINUX"
+ AM_CONDITIONAL(BSD, [test "x$IS_BSD" = xyes])
+ AM_CONDITIONAL(SOLARIS, [test "x$IS_SOLARIS" = xyes])
+ AM_CONDITIONAL(HURD, [test "x$IS_HURD" = xyes])
++AM_CONDITIONAL(NTO, [test "x$IS_NTO" = xyes])
+ 
+ DRIVER_NAME=kbd
+ AC_SUBST([DRIVER_NAME])

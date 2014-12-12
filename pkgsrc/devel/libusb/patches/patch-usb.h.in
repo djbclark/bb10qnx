@@ -1,0 +1,29 @@
+$NetBSD$
+
+--- usb.h.in.orig	2006-03-04 02:52:46.000000000 +0000
++++ usb.h.in
+@@ -17,6 +17,24 @@
+ 
+ #include <dirent.h>
+ 
++#if defined(__QNXNTO__)
++
++#ifndef _U_INT8_T_DEFINED
++#define _U_INT8_T_DEFINED
++typedef _Uint8t		u_int8_t;
++#endif
++
++#ifndef _U_INT16_T_DEFINED
++#define _U_INT16_T_DEFINED
++typedef _Uint16t	u_int16_t;
++#endif
++
++#ifndef _U_INT32_T_DEFINED
++#define _U_INT32_T_DEFINED
++typedef _Uint32t	u_int32_t;
++#endif
++#endif
++
+ /*
+  * USB spec information
+  *

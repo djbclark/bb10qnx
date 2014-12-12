@@ -1,0 +1,11 @@
+textproc/nbsed/Makefile:	$NetBSD: Makefile,v 1.23 2012/10/25 06:56:08 asau Exp $
+textproc/nbsed/PLIST:	$NetBSD: PLIST,v 1.3 2012/03/08 01:12:07 joerg Exp $
+textproc/nbsed/files/POSIX:	$NetBSD: POSIX,v 1.1.1.1 2003/08/18 17:34:55 agc Exp $
+textproc/nbsed/files/compile.c:	$NetBSD: compile.c,v 1.7 2005/11/30 21:07:14 schwarz Exp $
+textproc/nbsed/files/defs.h:	$NetBSD: defs.h,v 1.6 2004/11/20 06:41:35 grant Exp $
+textproc/nbsed/files/extern.h:	$NetBSD: extern.h,v 1.3 2004/08/23 03:03:08 jlam Exp $
+textproc/nbsed/files/main.c:	$NetBSD: main.c,v 1.5 2004/08/21 08:39:54 jlam Exp $
+textproc/nbsed/files/misc.c:	$NetBSD: misc.c,v 1.3 2004/08/21 08:39:54 jlam Exp $
+textproc/nbsed/files/process.c:	$NetBSD: process.c,v 1.9 2007/03/07 19:18:39 rillig Exp $
+textproc/nbsed/files/sed.1:	$NetBSD: sed.1,v 1.1 2004/08/27 03:45:08 jlam Exp $
+textproc/nbsed/files/sed2nbcompat:	$NetBSD: sed2nbcompat,v 1.2 2004/08/27 03:45:08 jlam Exp $

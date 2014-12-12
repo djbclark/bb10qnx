@@ -1,0 +1,6 @@
+$NetBSD: distinfo,v 1.1 2013/05/27 10:51:01 rodent Exp $
+
+SHA1 (xclock-1.0.6.tar.bz2) = 993817c9e3cc2baaaebe52b29fa2ad26e58b124d
+RMD160 (xclock-1.0.6.tar.bz2) = ebdba0264b66bee85a73d1ee41bc6f7f5ff3edd0
+Size (xclock-1.0.6.tar.bz2) = 156817 bytes
+SHA1 (patch-Clock.c) = b621761a883f0ab433a29e14f5c80d68aaf1d9bf

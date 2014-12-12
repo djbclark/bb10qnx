@@ -1,0 +1,46 @@
+@cwd /accounts/devuser/pkg
+@pkgcfl mk-files-[0-9]*
+@name bootstrap-mk-files-20130703
+@comment $NetBSD: PLIST,v 1.3 2009/06/14 18:11:02 joerg Exp $
+share/mk/bsd.README
+@comment MD5:94beb3a9ffb18f9b058b690b5f1508c4
+share/mk/bsd.dep.mk
+@comment MD5:df715f5a56730cae6e8fddf7cc875da1
+share/mk/bsd.depall.mk
+@comment MD5:75e153dc362752430e025ee090498efb
+share/mk/bsd.doc.mk
+@comment MD5:19eeaf160394698d72d8f74612fe3860
+share/mk/bsd.files.mk
+@comment MD5:06506ffef5c3774895ddcc9a3be33e12
+share/mk/bsd.hostprog.mk
+@comment MD5:d71961e8e672c38d1cdaf073da57fce5
+share/mk/bsd.inc.mk
+@comment MD5:9bf397aa85f106745d7a04e3927ed71c
+share/mk/bsd.info.mk
+@comment MD5:1a54307f4c1ca2e7b59d9bd320223b64
+share/mk/bsd.kernobj.mk
+@comment MD5:90b6518e05048dae464ec20097fd277a
+share/mk/bsd.kinc.mk
+@comment MD5:c0c90aac2da24697b16c0dba8a13e75e
+share/mk/bsd.kmod.mk
+@comment MD5:6fc281388f18f275f9c5e03d012a6bb2
+share/mk/bsd.lib.mk
+@comment MD5:e333d979a8ef62a9c46ab06ab083f7d8
+share/mk/bsd.links.mk
+@comment MD5:42a84d601352a0f21d4d012878ae2aba
+share/mk/bsd.man.mk
+@comment MD5:86b3b26c99ad80b431a69b44e91fae75
+share/mk/bsd.nls.mk
+@comment MD5:e9d20882220fea15ccf732f4b924da0d
+share/mk/bsd.obj.mk
+@comment MD5:b718a0fbd7de44e829038041b75a3faa
+share/mk/bsd.own.mk
+@comment MD5:23d9b56322baaeb75f88483e5e25fa4a
+share/mk/bsd.prog.mk
+@comment MD5:50983735c54fb38410f8daffb918fc01
+share/mk/bsd.subdir.mk
+@comment MD5:b5ea90168542f95386237173d162d316
+share/mk/bsd.sys.mk
+@comment MD5:c95562b0cd004e6d9e67da1be8d1ed01
+share/mk/sys.mk
+@comment MD5:c113c79c6d01f5d8bd8cb56990078e67

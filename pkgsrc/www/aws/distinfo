@@ -1,0 +1,17 @@
+$NetBSD: distinfo,v 1.7 2013/07/07 23:46:50 marino Exp $
+
+SHA1 (aws-3.1.0.0.tar.bz2) = a8135b10bad5a751840858acb305cbb01b5558db
+RMD160 (aws-3.1.0.0.tar.bz2) = d7c8dc904a0a91a8754aae8d07eb8b015fbf3b1f
+Size (aws-3.1.0.0.tar.bz2) = 1529933 bytes
+SHA1 (patch-config__projects__aws.gpr) = 3a93507e35c30bb6cf376409b681303bf7e39d7a
+SHA1 (patch-demos_test__ldap_test__ldap.gpr) = eeb126ab85442cc47b6a8844c4c4eea1b697be72
+SHA1 (patch-docs__gentexifile) = 0613450bb248a17659ae0a435a3e8ca64d29cd0c
+SHA1 (patch-docs__makefile) = 6f36ef4688b542ec100882014d3c1842c1d00dd8
+SHA1 (patch-docs_docs.gpr) = acbe31da756c0cc3ee86132eedd0f0cc0ae6dd0e
+SHA1 (patch-include_include.gpr) = 1c407b9769e10106cd521241986f569146879af1
+SHA1 (patch-makefile) = 31a316463838c7ab38edcd92ee2a376043065832
+SHA1 (patch-regtests__0043_check_mem__test.opt) = abe81a8c9aeb10faac6ea9469408dd89b1c85a65
+SHA1 (patch-src_src.gpr) = 6b7d6732724dbcc5da5e917ee2f2f5d597b3441b
+SHA1 (patch-ssl__crypto_lib.gpr) = e6624d49c72e3dea73ad2b66044f0da5e7ef0a99
+SHA1 (patch-templates_parser__docs__gentexifile) = d9019f7ee865d38e3cf3f4fb08d942e1a6bb1367
+SHA1 (patch-templates_parser__docs__makefile) = a26ea46580397c06c7a1148cdf9be44545bb124e

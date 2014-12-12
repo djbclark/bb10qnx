@@ -1,0 +1,18 @@
+$NetBSD: patch-js_src_config_system-headers,v 1.1 2013/05/23 13:12:13 ryoon Exp $
+
+--- js/src/config/system-headers.orig	2013-06-18 11:01:24.000000000 +0000
++++ js/src/config/system-headers
+@@ -287,6 +287,7 @@ Carbon/Carbon.h
+ CarbonEvents.h
+ Carbon.h
+ cassert
++cmath
+ c_asm.h
+ cctype
+ cderr.h
+@@ -1127,3 +1128,5 @@ sys/thr.h
+ sys/user.h
+ kvm.h
+ spawn.h
++err.h
++xlocale.h

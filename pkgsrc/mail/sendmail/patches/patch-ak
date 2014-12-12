@@ -1,0 +1,12 @@
+$NetBSD$
+
+--- include/sm/os/sm_os_qnx.h.orig	2007-03-21 19:56:20.000000000 -0400
++++ include/sm/os/sm_os_qnx.h
+@@ -15,6 +15,4 @@
+ 
+ #define SM_CONF_SYS_CDEFS_H	1
+ 
+-#ifndef SM_CONF_SETITIMER
+-# define SM_CONF_SETITIMER	0
+-#endif /* SM_CONF_SETITIMER */
++#define HAVE_NANOSLEEP		1

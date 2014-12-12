@@ -1,0 +1,13 @@
+$NetBSD$
+
+--- mkspecs/qnx-g++/qplatformdefs.h.orig	2003-05-27 10:19:20.000000000 -0500
++++ mkspecs/qnx-g++/qplatformdefs.h
+@@ -77,7 +77,7 @@
+ #define QT_SIGNAL_ARGS		int
+ #define QT_SIGNAL_IGNORE	SIG_IGN
+ 
+-#define QT_SOCKLEN_T		size_t
++#define QT_SOCKLEN_T		socklen_t
+ 
+ #define QT_SNPRINTF		::snprintf
+ #define QT_VSNPRINTF		::vsnprintf

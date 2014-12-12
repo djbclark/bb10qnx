@@ -1,0 +1,38 @@
+@cwd /accounts/devuser/pkg
+@pkgcfl audit-packages-[0-9]*
+@name pkg_install-20130131nb1
+@comment $NetBSD: PLIST,v 1.16 2012/03/04 11:40:46 wiz Exp $
+man/man1/pkg_add.1
+@comment MD5:b767322138a4b24fe8449e93aac9d353
+man/man1/pkg_admin.1
+@comment MD5:ca5de28c040cac4ab6bd0b0f4fb0c7b8
+man/man1/pkg_create.1
+@comment MD5:9b30954511ee5a2dc90772e5acfe2a5f
+man/man1/pkg_delete.1
+@comment MD5:020187b47ac4c701e45008cb5a913ca4
+man/man1/pkg_info.1
+@comment MD5:72ac630aecc392e4d2848f313422379b
+man/man5/pkg_install.conf.5
+@comment MD5:3db8c693ac2592240446160604a0cc36
+man/man5/pkg_summary.5
+@comment MD5:3be2123424e60cf379e904b737dddfc3
+man/man7/pkgsrc.7
+@comment MD5:fc62be665db8924cefd8fc8d9880d80f
+man/man8/audit-packages.8
+@comment MD5:c12307b3fe0a2e93c884b7edc2fa7c25
+man/man8/download-vulnerability-list.8
+@comment MD5:e511ac4da4dedd696a0a83459349adf6
+sbin/audit-packages
+@comment MD5:bfce1fcfb3376b6dfc61b208d77a8e2e
+sbin/download-vulnerability-list
+@comment MD5:3e623f144580a30f796a29f5dd046f82
+sbin/pkg_add
+@comment MD5:7f190d8171a590135bd94bf6bfb4fdf5
+sbin/pkg_admin
+@comment MD5:d4b53ac59e8bacf1fc11c9f9dbfb2450
+sbin/pkg_create
+@comment MD5:83895e89341f3ef6272192d5138aaf5c
+sbin/pkg_delete
+@comment MD5:c37386464401c644eab57b98bee48769
+sbin/pkg_info
+@comment MD5:1bfe7e7c8a16c403afed22c2af960e89

@@ -1,0 +1,18 @@
+$NetBSD: distinfo,v 1.51 2013/05/21 18:38:03 joerg Exp $
+
+SHA1 (xorg-server-1.12.4.tar.bz2) = 6d616874f9c7677bda08dc073c03f83e78fbc585
+RMD160 (xorg-server-1.12.4.tar.bz2) = 4907b5dc42efd6b3fb6bf9d64f1441080a6a6983
+Size (xorg-server-1.12.4.tar.bz2) = 5444761 bytes
+SHA1 (patch-configure.ac) = 1e2ae67c8cfa9436b98f92c7d4ae90a4849f1d7d
+SHA1 (patch-hw_xfree86_common_compiler.h) = 88de747715b80b22f448869ab32dce1641bcb6db
+SHA1 (patch-hw_xfree86_common_xf86Configure.c) = 12aa00ce0e5854a1bd2363a3e598dca0e07340d5
+SHA1 (patch-hw_xfree86_common_xf86Events.c) = 0b451563a25efe413e0e6b00b1c353fada6d21f1
+SHA1 (patch-hw_xfree86_common_xf86cmap.c) = acc747e33e351cf8ffa05958e34af688a60a097d
+SHA1 (patch-hw_xfree86_os-support_bus_Pci.h) = 2d12758be32af7d25dc006758460a1e2ad03e8f7
+SHA1 (patch-hw_xfree86_os-support_shared_posix__tty.c) = 6fb32020df374a4a3c8d29dd59758275ad3585cf
+SHA1 (patch-hw_xfree86_os-support_xf86__OSlib.h) = 036e789391213b29ed7e62d3022f7eee841a44d7
+SHA1 (patch-hw_xfree86_parser_write.c) = 3e9fa53cea9c83a038a0544cc18e75b107e3eca8
+SHA1 (patch-os_access.c) = 4adf822b1d375b36a6b815570c287d3d4787492a
+SHA1 (patch-os_osdep.h) = bcbad09ef9e740f89c45a2e346f47358d367f3ec
+SHA1 (patch-os_osinit.c) = 1526b9abc5a480a89cf1845c3c77d8b99492d9f3
+SHA1 (patch-os_utils.c) = d6a99ed7dbc82bd7364e25dc79a3b2ac9d1b706f

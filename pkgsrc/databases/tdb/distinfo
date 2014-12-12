@@ -1,0 +1,11 @@
+$NetBSD: distinfo,v 1.6 2013/06/14 21:18:22 wiz Exp $
+
+SHA1 (tdb-1.2.12.tar.gz) = 5c6d0b7108a261e7a57172f8ae06b6d327217dfd
+RMD160 (tdb-1.2.12.tar.gz) = df92c123f235e7261675156c477022ecbf553b63
+Size (tdb-1.2.12.tar.gz) = 462590 bytes
+SHA1 (patch-lib_replace_replace.c) = 39f66da98dd8d2fd1d03e6b737fe4f328f4132e7
+SHA1 (patch-lib_replace_snprintf.c) = 99099ac793f1c87373e669efec330544a7270d1c
+SHA1 (patch-lib_replace_test_snprintf.c) = ae06e6c2e5bb57e9b816eca844f210e832ad1a16
+SHA1 (patch-lib_replace_wscript) = e7f0092c13beb98f832b8efe1900fb549620cc53
+SHA1 (patch-tools_tdbbackup.c) = 43d09a6bdcff2c60f98d61ba380a62518eb581b2
+SHA1 (patch-tools_tdbtorture.c) = fb2c37c611a893fcbeab83fd1881e74a854de97e

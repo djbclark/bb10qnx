@@ -1,0 +1,22 @@
+$NetBSD$
+
+--- src/osdep/unix/os_nto.h.orig	2006-08-30 21:54:41.000000000 -0400
++++ src/osdep/unix/os_nto.h
+@@ -41,9 +41,7 @@
+ /* QNX gets these wrong */
+ 
+ #define setpgrp setpgid
+-#define readdir Readdir
+ #define FNDELAY O_NONBLOCK
+-#define d_ino d_fileno
+ 
+ 
+ /* Different names, equivalent things in BSD and SysV */
+@@ -63,7 +61,6 @@
+ int portable_utime (char *file,time_t timep[2]);
+ 
+ long gethostid (void);
+-struct direct *Readdir (DIR *dirp);
+ typedef int (*select_t) (struct direct *name);
+ typedef int (*compar_t) (void *d1,void *d2);
+ 

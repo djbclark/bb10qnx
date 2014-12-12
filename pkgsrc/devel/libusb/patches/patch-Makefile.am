@@ -1,0 +1,19 @@
+$NetBSD$
+
+--- Makefile.am.orig	2006-03-04 02:52:46.000000000 +0000
++++ Makefile.am
+@@ -36,10 +36,14 @@ LDADDS = -Wl,-framework -Wl,IOKit -Wl,-f
+ PREBIND_FLAGS=-Wl,-seg1addr,0x01666000
+ PREBIND_FLAGSPP=-Wl,-seg1addr,0x01676000
+ else
++if QNX6_API
++OS_SUPPORT = qnx6.c
++else
+ OS_SUPPORT = 
+ endif
+ endif
+ endif
++endif
+ 
+ AM_CFLAGS += $(AM_CFLAGS_EXT)
+ 

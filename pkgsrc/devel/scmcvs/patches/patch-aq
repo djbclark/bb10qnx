@@ -1,0 +1,13 @@
+$NetBSD: patch-aq,v 1.3 2013/10/14 06:51:02 adam Exp $
+
+--- src/recurse.c.orig	2005-09-04 00:27:44.000000000 +0000
++++ src/recurse.c
+@@ -619,7 +619,7 @@ do_recursion (struct recursion_frame *fr
+     if (frame->flags == R_SKIP_ALL)
+ 	return 0;
+ 
+-    locktype = noexec ? CVS_LOCK_NONE : frame->locktype;
++    locktype = nolock ? CVS_LOCK_NONE : frame->locktype;
+ 
+     /* The fact that locks are not active here is what makes us fail to have
+        the

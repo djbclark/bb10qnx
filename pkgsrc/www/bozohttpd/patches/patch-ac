@@ -1,0 +1,45 @@
+$NetBSD$
+
+--- main.c.orig	2010-05-10 02:51:28.000000000 +0000
++++ main.c
+@@ -46,6 +46,10 @@
+ #include <syslog.h>
+ #include <time.h>
+ #include <unistd.h>
++#ifdef __QNXNTO__
++#include <dlfcn.h>
++char *percent_s_null = "(null)";
++#endif
+ 
+ #ifndef __attribute__
+ #define __attribute__(x)
+@@ -127,6 +131,10 @@ main(int argc, char **argv)
+ 	bozoprefs_t	 prefs;
+ 	char		*progname;
+ 	int		 c;
++#ifdef __QNXNTO__
++	void    *hdl;
++	char    **percentsp;
++#endif
+ 
+ 	(void) memset(&httpd, 0x0, sizeof(httpd));
+ 	(void) memset(&prefs, 0x0, sizeof(prefs));
+@@ -138,6 +146,18 @@ main(int argc, char **argv)
+ 
+ 	openlog(progname, LOG_PID|LOG_NDELAY, LOG_FTP);
+ 
++#ifdef __QNXNTO__
++	/*
++	 * Print something pretty rather than faulting
++	 * in stdio when NULL is passed to %s.
++	 */
++	if ((hdl = dlopen(NULL, RTLD_WORLD)) != NULL &&
++	    (percentsp = dlsym(hdl, "output_for_percent_s_NULL")) != NULL) {
++		*percentsp = percent_s_null;
++	}
++	dlclose(hdl);
++#endif
++
+ 	bozo_set_defaults(&httpd, &prefs);
+ 
+ 	while ((c = getopt(argc, argv,

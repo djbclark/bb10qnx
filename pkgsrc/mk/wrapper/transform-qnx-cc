@@ -1,0 +1,79 @@
+#
+# This file handles the transformations needed for gcc that can be done
+# looking at only one argument at a time.
+#
+
+transform_setname "transform-qnx-cc"
+
+case $arg in
+
+# Standard options.
+-[cgOos]		|\
+-[DILlU]?*		|\
+-O[01]			) transform_pass ;;
+
+# This can go away when qcc preprocesses headers (PR44512).
+# XXX Don't forget to add -E to 'Standard options' (first line)
+# above.
+-E			) transform_to_and_split "-xc -E" ;;
+
+# GCC extensions.
+-fPIC			|\
+-fno-implicit-templates	|\
+-ggdb			) transform_pass ;;
+# The following two can go away when qcc handles -M properly
+# (PR26458).  See also cmd-sink-qnx-cc for -M munging.
+-M			) transform_to_and_split "-E -Wp,-M" ;;
+-M[DFMPT]*		) transform_to "-Wp,$arg" ;;
+-O[23s]			|\
+-pipe			|\
+-pthread		|\
+-shared			|\
+-static			) transform_pass;;
+-pedantic		) transform_to "-Wp,-pedantic" ;;
+-std=c99		) transform_to "-Wc,-std=c99" ;;
+-std=gnu99		) transform_to "-Wc,-std=gnu99" ;;
+-d[DIMN]		) transform_to "-Wp,$arg" ;;
+# We suppose to transform -traditional to -Wp,-traditional
+# but qcc (cc1) does not support "-traditional", for now
+# we force them both to "-traditional-cpp" (PR51553)
+-traditional		) transform_to "-Wp,-traditional-cpp" ;;
+-traditional-cpp	) transform_to "-Wp,-traditional-cpp" ;;
+-W			|\
+-W[cLlS],*		|\
+-Wall			|\
+-Wcast-align		|\
+-Wcast-qual		|\
+-Wextra			|\
+-Werror			|\
+-Wformat=[012]		|\
+-Wmissing-prototypes	|\
+-Wno-error		|\
+-Wno-implicit-int	|\
+-Wno-long-long		|\
+-Wno-traditional	|\
+-Wno-uninitialized	|\
+-Wno-unused		|\
+-Wno-write-strings	|\
+-Wpointer-arith		|\
+-Wreturn-type		|\
+-Wshadow		|\
+-Wsign-compare		|\
+-Wstrict-prototypes	|\
+-Wswitch		|\
+-Wwrite-strings		) transform_pass ;;
+
+# Options specific to g++.
+-fmessage-length=*	|\
+-fno-exceptions		|\
+-fno-rtti		) transform_pass ;;
+
+# Other compiler's options that have corresponding GCC options.
+-KPIC			|\
+-kPIC			) transform_to "-fPIC" ;;
+-mt			) transform_to "-threads" ;;
+
+# Unknown options.
+-*			) transform_pass_with_warning ;;
+
+esac

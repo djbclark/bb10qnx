@@ -1,0 +1,5 @@
+$NetBSD: distinfo,v 1.8 2013/07/10 03:01:57 schmonz Exp $
+
+SHA1 (TimeDate-2.30.tar.gz) = db2f810bf665062998ffc1ba873c29287120f3f5
+RMD160 (TimeDate-2.30.tar.gz) = 78eb4306d82635d15182e16044467f5e6ffeb39a
+Size (TimeDate-2.30.tar.gz) = 31109 bytes

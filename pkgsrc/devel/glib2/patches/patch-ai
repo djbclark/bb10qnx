@@ -1,0 +1,31 @@
+$NetBSD: patch-ai,v 1.21 2012/11/13 21:23:07 adam Exp $
+
+http://bugzilla.gnome.org/show_bug.cgi?id=583321
+
+--- glib/gmain.c.orig	2013-06-09 22:03:18.000000000 +0000
++++ glib/gmain.c
+@@ -101,6 +101,12 @@
+ #include "glib-init.h"
+ #include "glib-private.h"
+ 
++#ifdef __QNXNTO__
++#ifndef NSIG
++#define NSIG _NSIG
++#endif
++#endif
++
+ /**
+  * SECTION:main
+  * @title: The Main Event Loop
+@@ -4937,7 +4943,11 @@ ensure_unix_signal_handler_installed_unl
+ 
+   action.sa_handler = g_unix_signal_handler;
+   sigemptyset (&action.sa_mask);
++#ifdef SA_RESTART
+   action.sa_flags = SA_RESTART | SA_NOCLDSTOP;
++#else /* QNX */
++  action.sa_flags = SA_NOCLDSTOP;
++#endif
+   sigaction (signum, &action, NULL);
+ }
+ 

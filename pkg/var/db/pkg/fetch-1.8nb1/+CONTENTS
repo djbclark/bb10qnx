@@ -1,0 +1,21 @@
+@cwd /accounts/devuser/pkg
+@name fetch-1.8nb1
+@blddep libfetch-2.34nb2
+@comment $NetBSD: PLIST,v 1.1.1.1 2008/10/08 15:28:30 joerg Exp $
+bin/fetch
+@comment MD5:c5aeaf07eea02773846073a42ba7fa2c
+man/man1/fetch.1
+@comment MD5:172fea50b90d86014e2acbc2847424a3
+@cwd /accounts/devuser/pkg
+@ignore
++COMMENT
+@ignore
++DESC
+@ignore
++BUILD_VERSION
+@ignore
++BUILD_INFO
+@ignore
++SIZE_PKG
+@ignore
++SIZE_ALL

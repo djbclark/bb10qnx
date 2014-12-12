@@ -1,0 +1,22 @@
+$NetBSD$
+
+--- src/Makefile.am.orig	2010-06-18 04:33:50.000000000 +0000
++++ src/Makefile.am
+@@ -29,6 +29,7 @@ BSD_SRCS = bsd_KbdMap.c bsd_kbd.c bsd_kb
+ HURD_SRCS = hurd_kbd.c at_scancode.c
+ LINUX_SRCS = lnx_KbdMap.c lnx_kbd.c lnx_kbd.h at_scancode.c
+ SOLARIS_SRCS = sun_kbd.c sun_kbd.h sun_kbdMap.c
++NTO_SRCS = nto_KbdMap.c nto_kbd.c nto_kbd.h at_scancode.c
+ 
+ if BSD
+ kbd_drv_la_SOURCES += $(BSD_SRCS)
+@@ -46,4 +47,8 @@ if HURD
+ kbd_drv_la_SOURCES += $(HURD_SRCS)
+ endif
+ 
+-EXTRA_DIST = $(BSD_SRCS) $(HURD_SRCS) $(LINUX_SRCS) $(SOLARIS_SRCS)
++if NTO
++kbd_drv_la_SOURCES += $(NTO_SRCS)
++endif
++
++EXTRA_DIST = $(BSD_SRCS) $(HURD_SRCS) $(LINUX_SRCS) $(SOLARIS_SRCS) $(NTO_SRCS)

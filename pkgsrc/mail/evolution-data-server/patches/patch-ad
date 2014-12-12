@@ -1,0 +1,14 @@
+$NetBSD$
+
+--- libedataserver/e-time-utils.c.orig	2010-09-21 06:21:00.000000000 +0000
++++ libedataserver/e-time-utils.c
+@@ -9,7 +9,9 @@
+  */
+ 
+ #include <config.h>
++#ifndef __QNXNTO__
+ #define _XOPEN_SOURCE
++#endif
+ 
+ /* For tm_gmtoff */
+ #define _BSD_SOURCE

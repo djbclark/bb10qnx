@@ -1,0 +1,13 @@
+$NetBSD$
+
+--- src/corelib/kernel/qcoreapplication.cpp.orig	2010-11-06 01:55:19.000000000 +0000
++++ src/corelib/kernel/qcoreapplication.cpp
+@@ -532,7 +532,7 @@ void QCoreApplication::init()
+ {
+     Q_D(QCoreApplication);
+ 
+-#ifdef Q_OS_UNIX
++#if defined(Q_OS_UNIX) && !defined(Q_OS_QNX) /* On qnx this sets locale to "POSIX" which iconv doesn't like */
+     setlocale(LC_ALL, "");                // use correct char set mapping
+     qt_locale_initialized = true;
+ #endif

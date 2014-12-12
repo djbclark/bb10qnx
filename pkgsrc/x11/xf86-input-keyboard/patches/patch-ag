@@ -1,0 +1,11 @@
+$NetBSD$
+
+--- src/nto_kbd.h.orig	2009-06-03 14:48:41.000000000 -0400
++++ src/nto_kbd.h
+@@ -0,0 +1,6 @@
++extern void KbdGetMapping(InputInfoPtr pInfo, KeySymsPtr pKeySyms,
++				CARD8 *pModMap);
++
++extern void KbdGetMapping(InputInfoPtr pInfo, KeySymsPtr pKeySyms,
++				CARD8 *pModMap);
++

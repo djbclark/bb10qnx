@@ -1,0 +1,14 @@
+$NetBSD$
+
+--- src/option.h.orig	2009-08-06 14:26:24.000000000 +0000
++++ src/option.h
+@@ -27,7 +27,9 @@
+ 
+ #include "zenity.h"
+ #include <glib.h>
++#ifndef __QNXNTO__
+ #include <langinfo.h>
++#endif
+ #ifdef HAVE_LOCALE_H
+ #include <locale.h>
+ #endif

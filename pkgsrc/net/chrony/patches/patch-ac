@@ -1,0 +1,29 @@
+$NetBSD: patch-ac,v 1.4 2010/02/26 09:27:43 hannken Exp $
+
+--- chronyd.8.orig	2010-02-04 13:07:19.000000000 +0100
++++ chronyd.8
+@@ -25,8 +25,8 @@
+ 
+ If \fBchronyd\fR has been installed to its default location
+-\fI/usr/local/sbin/chronyd\fR, starting it is simply a matter of entering the
++\fI@PREFIX@/sbin/chronyd\fR, starting it is simply a matter of entering the
+ command:
+ 
+-\fI/usr/local/sbin/chronyd\fR
++\fI@PREFIX@/sbin/chronyd\fR
+ 
+ Information messages and warnings will be logged to syslog.
+@@ -53,5 +53,5 @@
+ \fB\-f\fR \fIconf-file\fR
+ This option can be used to specify an alternate location for the
+-configuration file (default \fI/etc/chrony.conf\fR).
++configuration file (default \fI@PKG_SYSCONFDIR@/chrony.conf\fR).
+ .TP
+ .B \-r
+@@ -103,5 +103,5 @@
+ 
+ .SH FILES
+-\fI/etc/chrony.conf\fR
++\fI@PKG_SYSCONFDIR@/chrony.conf\fR
+ 
+ .SH VERSION

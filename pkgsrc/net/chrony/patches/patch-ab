@@ -1,0 +1,28 @@
+$NetBSD: patch-ab,v 1.4 2010/02/26 09:27:43 hannken Exp $
+
+--- chrony.conf.5.orig	2010-02-04 13:07:19.000000000 +0100
++++ chrony.conf.5
+@@ -4,5 +4,5 @@
+ 
+ .SH SYNOPSIS
+-.B /etc/chrony.conf
++.B @PKG_SYSCONFDIR@/chrony.conf
+ 
+ .SH DESCRIPTION
+@@ -13,5 +13,5 @@
+ Assuming that you have found some servers, you need to set up a
+ configuration file to run \fIchrony\fR.  The (compiled-in) default location
+-for this file is \fB/etc/chrony.conf\fR.  Assuming that your ntp servers
++for this file is \fB@PKG_SYSCONFDIR@/chrony.conf\fR.  Assuming that your ntp servers
+ are called `a.b.c' and `d.e.f', your \fBchrony.conf\fR file could contain
+ as a minimum
+@@ -30,7 +30,7 @@
+      server d.e.f
+      server g.h.i
+-     keyfile /etc/chrony.keys
++     keyfile @PKG_SYSCONFDIR@/chrony.keys
+      commandkey 1
+-     driftfile /etc/chrony.drift
++     driftfile @VARBASE@/db/chrony.drift
+ 
+ 

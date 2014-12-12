@@ -1,0 +1,14 @@
+$NetBSD$
+
+--- configure.orig	2012-03-16 06:34:36.000000000 +0000
++++ configure
+@@ -17686,6 +17686,9 @@ case $host_os in
+   freebsd*|kfreebsd*-gnu|dragonfly*|netbsd*|openbsd*)
+     OS_MOUSE_NAME=bsd
+     ;;
++  nto-qnx*)
++    OS_MOUSE_NAME=nto
++    ;;
+   solaris*)
+     OS_MOUSE_NAME=sun
+     ;;

@@ -1,0 +1,24 @@
+@cwd /accounts/devuser/pkg
+@name ccache-3.1.9
+@blddep zlib-1.2.8
+@pkgdep zlib>=1.2.3
+@blddep digest-20121220
+@blddep fetch-1.8nb1
+@comment $NetBSD: PLIST,v 1.1 2002/04/08 17:07:53 kent Exp $
+bin/ccache
+@comment MD5:002d6173bbcf6d34d2f0bf672fcf79ac
+man/man1/ccache.1
+@comment MD5:9f5ad4999a93faca0108a850cf0d2835
+@cwd /accounts/devuser/pkg
+@ignore
++COMMENT
+@ignore
++DESC
+@ignore
++BUILD_VERSION
+@ignore
++BUILD_INFO
+@ignore
++SIZE_PKG
+@ignore
++SIZE_ALL

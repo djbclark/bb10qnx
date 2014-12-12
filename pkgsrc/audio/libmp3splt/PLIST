@@ -1,0 +1,12 @@
+@comment $NetBSD: PLIST,v 1.7 2013/07/05 16:12:30 ryoon Exp $
+include/libmp3splt/mp3splt.h
+include/libmp3splt/version.h
+lib/libmp3splt.la
+lib/libmp3splt0/libsplt_mp3.la
+lib/libmp3splt0/libsplt_ogg.la
+lib/pkgconfig/libmp3splt.pc
+share/locale/cs/LC_MESSAGES/libmp3splt0.mo
+share/locale/de_DE/LC_MESSAGES/libmp3splt0.mo
+share/locale/es/LC_MESSAGES/libmp3splt0.mo
+share/locale/fr_FR/LC_MESSAGES/libmp3splt0.mo
+share/locale/hr/LC_MESSAGES/libmp3splt0.mo

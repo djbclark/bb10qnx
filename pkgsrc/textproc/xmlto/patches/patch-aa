@@ -1,0 +1,19 @@
+$NetBSD$
+
+--- format/docbook/man.orig	2009-09-18 10:02:48.000000000 +0000
++++ format/docbook/man
+@@ -9,5 +9,14 @@ stylesheet)
+ post-process)
+   [ -e "$XSLT_PROCESSED" ] && rm "$XSLT_PROCESSED"
+   ${GCP_PATH:-cp} -R -P -p -- * "$OUTPUT_DIR" 2>/dev/null
++  case "$(uname)" in
++  QNX)
++    # PR 77026
++    ${GCP_PATH:-cp} -R -p -- * "$OUTPUT_DIR" 2>/dev/null
++    ;;
++  *)
++    ${GCP_PATH:-cp} -R -P -p -- * "$OUTPUT_DIR" 2>/dev/null
++    ;;
++  esac
+   ;;
+ esac

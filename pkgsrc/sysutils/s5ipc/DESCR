@@ -1,0 +1,1 @@
+The package implement the sysv ipc(shm, sem, msg) on QNX6. It includes headers, lib and a resmgr.

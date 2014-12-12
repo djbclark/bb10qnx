@@ -1,0 +1,7 @@
+$NetBSD: distinfo,v 1.2 2013/07/18 11:59:28 sborrill Exp $
+
+SHA1 (XenServer-6.2.0-SDK.zip) = 09d35add52ab85a5de10841c45022c86dcf948fa
+RMD160 (XenServer-6.2.0-SDK.zip) = b9f8326fe5512582ffdd2d73db1c36b3522b54ae
+Size (XenServer-6.2.0-SDK.zip) = 10367600 bytes
+SHA1 (patch-Makefile) = d2159549bf4307411ab9b99f4beb3c3ab2cb411b
+SHA1 (patch-xen_common.c) = b750589e7c7bcd33fedca8a564371251eeb1f3c9

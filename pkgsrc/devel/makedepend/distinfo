@@ -1,0 +1,5 @@
+$NetBSD: distinfo,v 1.6 2013/07/23 06:49:11 wiz Exp $
+
+SHA1 (makedepend-1.0.5.tar.bz2) = 2599afa039d2070bae9df6ce43da288b3a4adf97
+RMD160 (makedepend-1.0.5.tar.bz2) = d1ba5b107ae145608a5f3e932fa2794eec1ddd0a
+Size (makedepend-1.0.5.tar.bz2) = 143498 bytes

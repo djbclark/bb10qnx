@@ -1,0 +1,14 @@
+$NetBSD$
+
+--- src/graph/plotfltk.c.orig	2008-03-31 11:43:58.000000000 +0000
++++ src/graph/plotfltk.c
+@@ -19,6 +19,9 @@ Foundation, Inc., 59 Temple Place - Suit
+ //
+ //  Based on plotQt by Nils-Peter Skoruppa (www.countnumber.de)
+ /////////////////////////////////////////////////////////////////////////////
++#ifdef __QNXNTO__
++#include <math.h> /* outside of extern "C" {} */
++#endif
+ extern "C" {
+ #include "pari.h"
+ #include "rect.h"

@@ -1,0 +1,39 @@
+$NetBSD: patch-configure.ac,v 1.1 2013/05/16 05:22:02 richard Exp $
+
+--- configure.ac.orig	2011-10-15 00:43:58.000000000 +0000
++++ configure.ac
+@@ -427,14 +427,14 @@ if test "x$enable_asm" = xyes; then
+     case "$host_cpu" in
+     i?86)
+         case "$host_os" in
+-        linux* | *freebsd* | dragonfly* | *netbsd*)
++        linux* | *freebsd* | dragonfly* | *netbsd* | *qnx*)
+             test "x$enable_64bit" = xyes && asm_arch=x86_64 || asm_arch=x86
+             ;;
+         esac
+         ;;
+     x86_64)
+         case "$host_os" in
+-        linux* | *freebsd* | dragonfly* | *netbsd*)
++        linux* | *freebsd* | dragonfly* | *netbsd* | *qnx*)
+             test "x$enable_32bit" = xyes && asm_arch=x86 || asm_arch=x86_64
+             ;;
+         esac
+@@ -1063,7 +1063,7 @@ if test "$mesa_driver" = dri -o "$mesa_d
+             ;;
+         esac
+         ;;
+-    freebsd* | dragonfly* | *netbsd*)
++    freebsd* | dragonfly* | *netbsd* | *qnx*)
+         DEFINES="$DEFINES -DPTHREADS -DUSE_EXTERNAL_DXTN_LIB=1"
+         DEFINES="$DEFINES -DIN_DRI_DRIVER -DHAVE_ALIAS"
+         DEFINES="$DEFINES -DGLX_INDIRECT_RENDERING"
+@@ -1086,6 +1086,8 @@ if test "$mesa_driver" = dri -o "$mesa_d
+         if test "x$driglx_direct" = xyes; then
+             DEFINES="$DEFINES -DGLX_DIRECT_RENDERING"
+         fi
++        DRI_LIB_MAPFILE='-Wl,-M,$(TOP)/src/mesa/drivers/dri/mapfile.externs'
++        DRI_LIB_DEPS="$DRI_LIB_DEPS $DRI_LIB_MAPFILE"
+         ;;
+     cygwin*)
+         DEFINES="$DEFINES -DUSE_EXTERNAL_DXTN_LIB=1 -DIN_DRI_DRIVER"

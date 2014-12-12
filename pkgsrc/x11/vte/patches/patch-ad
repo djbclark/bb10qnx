@@ -1,0 +1,15 @@
+$NetBSD$
+
+--- src/vtepangocairo.c.orig	2009-11-02 14:36:12.000000000 +0000
++++ src/vtepangocairo.c
+@@ -31,7 +31,9 @@
+ 
+ #include <pango/pangocairo.h>
+ 
+-
++#ifndef howmany
++#define      howmany(x, y)   (((x) + ((y) - 1)) / (y))
++#endif
+ /* Overview:
+  *
+  *

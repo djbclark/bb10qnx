@@ -1,0 +1,14 @@
+$NetBSD$
+
+--- libgnomevfs/gnome-vfs-volume-ops.c.orig	2010-02-09 12:16:14.000000000 +0000
++++ libgnomevfs/gnome-vfs-volume-ops.c
+@@ -34,6 +34,9 @@
+ #include <sys/wait.h>
+ #include <pthread.h>
+ #endif
++#ifdef __QNXNTO__
++#include <sys/select.h>
++#endif
+ 
+ #include <gconf/gconf-client.h>
+ #include "gnome-vfs-volume-monitor-private.h"

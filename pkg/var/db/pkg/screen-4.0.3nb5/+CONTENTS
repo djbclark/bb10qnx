@@ -1,0 +1,88 @@
+@cwd /accounts/devuser/pkg
+@name screen-4.0.3nb5
+@blddep pkg_install-info-4.5nb3
+@pkgdep pkg_install-info-[0-9]*
+@blddep ncurses-5.9nb1
+@pkgdep ncurses>=5.4nb1
+@blddep digest-20121220
+@blddep fetch-1.8nb1
+@comment $NetBSD: PLIST,v 1.13 2009/06/14 20:52:13 joerg Exp $
+bin/screen
+@comment Symlink:screen-4.0.3
+bin/screen-4.0.3
+@comment MD5:553c40298b17f94a4c357a9d3301b85d
+info/screen.info
+@comment MD5:b36d48c535bb7bee3e0a57be38e5b0b7
+info/screen.info-1
+@comment MD5:f8aa13c72eefcebabf7a9f8cb62ce415
+info/screen.info-2
+@comment MD5:b95c1a3cc96a0335f9a4f5aaee319dde
+info/screen.info-3
+@comment MD5:49fb3fe1cc3a3b0057518459811b6dac
+info/screen.info-4
+@comment MD5:75037df80f64ed0086a1c0a4860d31d1
+info/screen.info-5
+@comment MD5:a435a539dcec140a1ea215718ee70cff
+man/man1/screen.1
+@comment MD5:9b5b314a2631dd3a6ad2e45e31b0639d
+share/examples/screen/etcscreenrc
+@comment MD5:05cf9d2bac00d9435c2a994674384a56
+share/examples/screen/screenrc
+@comment MD5:d0d99cbc69d3c1ef71fa7a6eb795b0e2
+@comment share/lib/terminfo/s/screen
+@comment share/lib/terminfo/s/screen-bce
+@comment share/lib/terminfo/s/screen-s
+share/screen/utf8encodings/01
+@comment MD5:76281f717432f4eb9a5dfcab64a8be7f
+share/screen/utf8encodings/02
+@comment MD5:8cd9fe3ecb3fcc1428626da74bf8beeb
+share/screen/utf8encodings/03
+@comment MD5:27da0eb94418d90b02a2ccc030273c1b
+share/screen/utf8encodings/04
+@comment MD5:1d30234e032959d0fde53b448b88c826
+share/screen/utf8encodings/18
+@comment MD5:5497658d62e49496bf0a7176ad416667
+share/screen/utf8encodings/19
+@comment MD5:985ace4fd49101fe083163c7261b1577
+share/screen/utf8encodings/a1
+@comment MD5:4c18e61daff2b1226abb12b444cc1630
+share/screen/utf8encodings/bf
+@comment MD5:7d3cf1fe64b08789cb9e8fd126e9a852
+share/screen/utf8encodings/c2
+@comment MD5:d7513aea282cdf9220a4994098488377
+share/screen/utf8encodings/c3
+@comment MD5:bf187b06b621d646e1bbfced5a2836ef
+share/screen/utf8encodings/c4
+@comment MD5:7d2c4cb28e9011f144f9e679a8cb780f
+share/screen/utf8encodings/c6
+@comment MD5:a5de3222a0fc376a71fabeeb50533a82
+share/screen/utf8encodings/c7
+@comment MD5:8abc40b75308cf89b6ba1ab6fd39c01b
+share/screen/utf8encodings/c8
+@comment MD5:4dbd4f512dc4af26144ca09c23466972
+share/screen/utf8encodings/cc
+@comment MD5:72e1c7e046226ab4493a456340ac6927
+share/screen/utf8encodings/cd
+@comment MD5:d71094ce45ac15fa8fa740b51e429561
+share/screen/utf8encodings/d6
+@comment MD5:62650ac56134c1e793e6e265aa647edd
+@cwd /accounts/devuser/pkg
+@ignore
++COMMENT
+@ignore
++DESC
+@ignore
++INSTALL
+@ignore
++DEINSTALL
+@ignore
++DISPLAY
+@display +DISPLAY
+@ignore
++BUILD_VERSION
+@ignore
++BUILD_INFO
+@ignore
++SIZE_PKG
+@ignore
++SIZE_ALL

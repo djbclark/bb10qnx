@@ -1,0 +1,22 @@
+$NetBSD$
+
+--- configure.ac.orig	2013-07-20 22:54:34.000000000 +0000
++++ configure.ac
+@@ -88,6 +88,9 @@ case $host_os in
+ 	*openbsd*)
+ 		openbsd=yes
+ 		;;
++	*nto*)
++		nto=yes
++		;;
+ 	*solaris*)
+ 		solaris=yes
+ 		PCIACCESS_LIBS="$PCIACCESS_LIBS -ldevinfo"
+@@ -100,6 +103,7 @@ esac
+ AM_CONDITIONAL(LINUX, [test "x$linux" = xyes])
+ AM_CONDITIONAL(FREEBSD, [test "x$freebsd" = xyes])
+ AM_CONDITIONAL(NETBSD, [test "x$netbsd" = xyes])
++AM_CONDITIONAL(NTO, [test "x$nto" = xyes])
+ AM_CONDITIONAL(OPENBSD, [test "x$openbsd" = xyes])
+ AM_CONDITIONAL(SOLARIS, [test "x$solaris" = xyes])
+ AM_CONDITIONAL(GNU, [test "x$gnu" = xyes])

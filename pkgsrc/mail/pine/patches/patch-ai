@@ -1,0 +1,31 @@
+$NetBSD$
+
+--- pine/osdep/os-nto.h.orig	2003-05-23 12:05:21.000000000 -0400
++++ pine/osdep/os-nto.h
+@@ -74,7 +74,7 @@
+    default-composer-hdrs or customized-hdrs to get at it. Instead of
+    defining NEVER_ALLOW_CHANGING_FROM, an easier way of preventing From
+    changing is to put the feature "no-allow-changing-from" in the
+-   /usr/local/lib/pine.conf.fixed file.
++   /usr/pkg/etc/pine.conf.fixed file.
+  ----*/
+ /* #define NEVER_ALLOW_CHANGING_FROM */
+ 
+@@ -218,7 +218,7 @@
+ 
+ /*----- The usual sendmail configuration for sending mail on Unix ------*/
+ #ifndef SENDMAIL
+-#define SENDMAIL	"/usr/bin/sendmail"
++#define SENDMAIL	"/usr/sbin/sendmail"
+ #endif
+ #ifndef SENDMAILFLAGS
+ #define SENDMAILFLAGS	"-bs -odb -oem"	/* send via smtp with backgroud
+@@ -280,7 +280,7 @@
+        8
+        9 logs gross details of command execution
+  ----*/
+-#define DEFAULT_DEBUG 2
++#define DEFAULT_DEBUG 0
+ 
+ 
+ 

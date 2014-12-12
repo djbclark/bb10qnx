@@ -1,0 +1,5 @@
+$NetBSD: distinfo,v 1.21 2013/07/10 02:02:09 schmonz Exp $
+
+SHA1 (XML-RSS-1.54.tar.gz) = 59f1e48980cfdaa85860f19fd8849417a12457b9
+RMD160 (XML-RSS-1.54.tar.gz) = 8988fa9e2be5c574042b3908edb355577d3296e0
+Size (XML-RSS-1.54.tar.gz) = 127636 bytes

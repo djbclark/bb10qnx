@@ -1,0 +1,16 @@
+$NetBSD$
+
+--- util.h.orig	1998-07-27 04:47:45.000000000 -0400
++++ util.h
+@@ -37,7 +37,11 @@
+ #define _UTIL_H_
+ 
+ #include <sys/cdefs.h>
++#ifndef __QNXNTO__
+ #include <sys/ttycom.h>
++#else
++#include <sys/ioctl.h>
++#endif
+ #include <sys/types.h>
+ #include <stdio.h>
+ #include <pwd.h>

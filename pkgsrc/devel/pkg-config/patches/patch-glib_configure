@@ -1,0 +1,38 @@
+$NetBSD: patch-glib_configure,v 1.1 2013/04/13 11:10:04 obache Exp $
+
+* from glib2.0.cygport 2.32.1-not-win32.patch
+
+--- glib/configure.orig	2013-01-22 13:13:56.000000000 +0000
++++ glib/configure
+@@ -24791,6 +24791,9 @@ if test x"$have_threads" = xposix; then
+       G_THREAD_CFLAGS="-D_REENTRANT -D_PTHREADS"
+       G_THREAD_LIBS="-lpthread -lthread"
+       ;;
++    *-nto-qnx*)
++       # nothing
++      ;;
+     *)
+       for flag in pthread pthreads mt; do
+         glib_save_CFLAGS="$CFLAGS"
+@@ -24887,6 +24890,11 @@ if test x"$G_THREAD_CFLAGS" = x; then
+ 		# No flag needed when using MSVCRT.DLL
+ 		G_THREAD_CFLAGS=""
+ 		;;
++	*-nto-qnx*)
++		# pthreads by default.  Nothing needed
++		G_THREAD_CFLAGS=""
++		G_THREAD_LIBS=""
++		;;
+ 	*)
+ 		G_THREAD_CFLAGS="-D_REENTRANT" # good default guess otherwise
+ 		;;
+@@ -25733,9 +25741,6 @@ $as_echo "$broken_poll" >&6; }
+ 
+ 
+ case $host in
+-  *-*-cygwin*)
+-	G_LIBS_EXTRA="-luser32 -lkernel32"
+-    ;;
+   *-*-mingw*)
+ 	G_LIBS_EXTRA="-lws2_32 -lole32 -lwinmm -lshlwapi"
+     ;;

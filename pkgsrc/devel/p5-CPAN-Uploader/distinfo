@@ -1,0 +1,5 @@
+$NetBSD: distinfo,v 1.2 2013/07/03 16:26:57 sno Exp $
+
+SHA1 (CPAN-Uploader-0.103004.tar.gz) = 6876e56f50c7f9b977b70de8a9bff8ebc16e85f6
+RMD160 (CPAN-Uploader-0.103004.tar.gz) = 6e5c444cbb09151e88ccd8c35eccc68cfcff2d72
+Size (CPAN-Uploader-0.103004.tar.gz) = 16581 bytes

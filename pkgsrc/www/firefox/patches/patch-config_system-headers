@@ -1,0 +1,18 @@
+$NetBSD: patch-config_system-headers,v 1.1 2013/05/23 13:12:13 ryoon Exp $
+
+--- config/system-headers.orig	2013-06-18 11:01:13.000000000 +0000
++++ config/system-headers
+@@ -291,6 +291,7 @@ c_asm.h
+ cctype
+ cderr.h
+ cerrno
++cmath
+ CFBase.h
+ CFBundle.h
+ CFData.h
+@@ -1127,3 +1128,5 @@ sys/thr.h
+ sys/user.h
+ kvm.h
+ spawn.h
++err.h
++xlocale.h

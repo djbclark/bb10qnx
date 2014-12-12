@@ -1,0 +1,16 @@
+devel/ncurses/Makefile.common:	$NetBSD: Makefile.common,v 1.19 2013/05/10 00:36:30 riastradh Exp $
+devel/ncurses/Makefile:	$NetBSD: Makefile,v 1.87 2013/05/31 12:40:01 wiz Exp $
+devel/ncurses/PLIST:	$NetBSD: PLIST,v 1.20 2011/02/28 11:02:46 adam Exp $
+devel/ncurses/buildlink3.mk:	$NetBSD: buildlink3.mk,v 1.42 2011/12/19 11:42:47 obache Exp $
+devel/ncurses/builtin.mk:	$NetBSD: builtin.mk,v 1.31 2011/02/28 11:02:46 adam Exp $
+devel/ncurses/distinfo:	$NetBSD: distinfo,v 1.22 2013/07/08 05:54:24 richard Exp $
+devel/ncurses/patches/patch-aa:	$NetBSD: patch-aa,v 1.16 2011/02/28 11:02:46 adam Exp $
+devel/ncurses/patches/patch-ab:	$NetBSD: patch-ab,v 1.16 2011/02/28 11:02:46 adam Exp $
+devel/ncurses/patches/patch-ac:	$NetBSD: patch-ac,v 1.19 2013/07/08 05:54:24 richard Exp $
+devel/ncurses/patches/patch-ad:	$NetBSD: patch-ad,v 1.11 2011/02/28 11:02:46 adam Exp $
+devel/ncurses/patches/patch-ae:	$NetBSD$
+devel/ncurses/patches/patch-af:	$NetBSD$
+devel/ncurses/patches/patch-c++_cursesw.h:	$NetBSD$
+devel/ncurses/patches/patch-cxx_cursesf.h:	$NetBSD: patch-cxx_cursesf.h,v 1.1 2011/02/28 11:02:46 adam Exp $
+devel/ncurses/patches/patch-cxx_cursesm.h:	$NetBSD: patch-cxx_cursesm.h,v 1.1 2011/02/28 11:02:46 adam Exp $
+devel/ncurses/patches/patch-include_curses.h.in:	$NetBSD$

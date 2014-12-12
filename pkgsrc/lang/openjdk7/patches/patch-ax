@@ -1,0 +1,335 @@
+$NetBSD$
+
+--- jdk/make/common/Defs-qnx.gmk.orig	2010-03-24 15:40:34.000000000 +0000
++++ jdk/make/common/Defs-qnx.gmk
+@@ -0,0 +1,330 @@
++#
++# Copyright 1999-2009 Sun Microsystems, Inc.  All Rights Reserved.
++# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
++#
++# This code is free software; you can redistribute it and/or modify it
++# under the terms of the GNU General Public License version 2 only, as
++# published by the Free Software Foundation.  Sun designates this
++# particular file as subject to the "Classpath" exception as provided
++# by Sun in the LICENSE file that accompanied this code.
++#
++# This code is distributed in the hope that it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++# version 2 for more details (a copy is included in the LICENSE file that
++# accompanied this code).
++#
++# You should have received a copy of the GNU General Public License version
++# 2 along with this work; if not, write to the Free Software Foundation,
++# Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
++#
++# Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
++# CA 95054 USA or visit www.sun.com if you need additional information or
++# have any questions.
++#
++
++#
++# Makefile to specify compiler flags for programs and libraries
++# targeted to Bsd.  Should not contain any rules.
++#
++# WARNING: This file is shared with other workspaces. 
++#          So when it includes other files, it must use JDK_TOPDIR.
++#
++
++# Warning: the following variables are overriden by Defs.gmk. Set
++# values will be silently ignored:
++#   CFLAGS        (set $(OTHER_CFLAGS) instead)
++#   CPPFLAGS      (set $(OTHER_CPPFLAGS) instead)
++#   CXXFLAGS      (set $(OTHER_CXXFLAGS) instead)
++#   LDFLAGS       (set $(OTHER_LDFAGS) instead)
++#   LDLIBS        (set $(EXTRA_LIBS) instead)
++#   LDLIBS_COMMON (set $(EXTRA_LIBS) instead)
++
++# Get shared JDK settings
++include $(JDK_MAKE_SHARED_DIR)/Defs.gmk
++
++ifndef PLATFORM_SRC
++  PLATFORM_SRC = $(BUILDDIR)/../src/solaris
++endif # PLATFORM_SRC
++
++# Platform specific closed sources
++ifndef OPENJDK
++  ifndef CLOSED_PLATFORM_SRC
++    CLOSED_PLATFORM_SRC = $(BUILDDIR)/../src/closed/solaris
++  endif
++endif
++
++# platform specific include files
++PLATFORM_INCLUDE_NAME = $(OS_NAME)
++PLATFORM_INCLUDE      = $(INCLUDEDIR)/$(PLATFORM_INCLUDE_NAME)
++
++# suffix used for make dependencies files.
++DEPEND_SUFFIX = d
++# The suffix applied to the library name for FDLIBM
++FDDLIBM_SUFFIX = a
++# The suffix applied to scripts (.bat for windows, nothing for unix)
++SCRIPT_SUFFIX =
++# CC compiler object code output directive flag value
++CC_OBJECT_OUTPUT_FLAG = -o #trailing blank required!
++CC_PROGRAM_OUTPUT_FLAG = -o #trailing blank required!
++
++#
++# Default HPI libraries. Build will build only native, unless
++# overriden at the make command line. This makes it convenient for
++# people doing, say, a pthreads port -- they can create a posix
++# directory here, and say "gnumake HPIS=posix" at the top
++# level.
++#
++HPIS = native
++
++#
++# Default optimization
++#
++
++ifndef OPTIMIZATION_LEVEL
++  ifeq ($(PRODUCT), java)
++    OPTIMIZATION_LEVEL = HIGHER
++  else
++    OPTIMIZATION_LEVEL = LOWER
++  endif
++endif
++ifndef FASTDEBUG_OPTIMIZATION_LEVEL
++  FASTDEBUG_OPTIMIZATION_LEVEL = LOWER
++endif
++
++CC_OPT/NONE     = 
++CC_OPT/LOWER    = -O2
++CC_OPT/HIGHER   = -O3
++CC_OPT/HIGHEST  = -O3
++
++CC_OPT          = $(CC_OPT/$(OPTIMIZATION_LEVEL))
++
++# For all platforms, do not omit the frame pointer register usage. 
++#    We need this frame pointer to make it easy to walk the stacks.
++#    This should be the default on X86, but ia64 and amd64 may not have this
++#    as the default.
++CFLAGS_REQUIRED_amd64   += -m64 -fno-omit-frame-pointer -D_LITTLE_ENDIAN
++LDFLAGS_COMMON_amd64    += -m64
++CFLAGS_REQUIRED_i586    += -m32 -fno-omit-frame-pointer -D_LITTLE_ENDIAN
++LDFLAGS_COMMON_i586     += -m32
++ifeq ($(OS_VENDOR),Apple)
++  # 16-byte stack re-alignment on 32-bit Darwin
++  CFLAGS_REQUIRED_i586 += -mstackrealign
++endif
++CFLAGS_REQUIRED_ia64    += -fno-omit-frame-pointer -D_LITTLE_ENDIAN
++CFLAGS_REQUIRED_sparcv9 += -m64 -mcpu=v9
++LDFLAGS_COMMON_sparcv9  += -m64 -mcpu=v9
++CFLAGS_REQUIRED_sparc   += -m32 -mcpu=v9
++LDFLAGS_COMMON_sparc    += -m32 -mcpu=v9
++CFLAGS_REQUIRED         =  $(CFLAGS_REQUIRED_$(ARCH))
++LDFLAGS_COMMON          += $(LDFLAGS_COMMON_$(ARCH))
++
++# If this is a --hash-style=gnu system, use --hash-style=both
++#   The gnu .hash section won't work on some Bsd systems like SuSE 10.
++_HAS_HASH_STYLE_GNU:=$(shell $(CC) -dumpspecs | $(GREP) -- '--hash-style=gnu')
++ifneq ($(_HAS_HASH_STYLE_GNU),)
++  LDFLAGS_HASH_STYLE = -Wl,--hash-style=both
++endif
++LDFLAGS_COMMON          += $(LDFLAGS_HASH_STYLE)
++
++#
++# Selection of warning messages
++#
++GCC_INHIBIT	= -Wno-unused -Wno-parentheses
++GCC_STYLE	= 
++GCC_WARNINGS	= -W -Wall $(GCC_STYLE) $(GCC_INHIBIT)
++
++#
++# Treat compiler warnings as errors, if warnings not allowed
++#
++ifeq ($(COMPILER_WARNINGS_FATAL),true)
++  GCC_WARNINGS += -Werror
++endif
++
++#
++# Misc compiler options
++#
++ifeq ($(ARCH),ppc)
++  CFLAGS_COMMON   = -fsigned-char
++else # ARCH
++  CFLAGS_COMMON   = -fno-strict-aliasing
++endif # ARCH
++PIC_CODE_LARGE = -fPIC
++PIC_CODE_SMALL = -fpic
++GLOBAL_KPIC = $(PIC_CODE_LARGE)
++CFLAGS_COMMON   += $(GLOBAL_KPIC) $(GCC_WARNINGS)
++ifeq ($(ARCH), amd64)
++ CFLAGS_COMMON += -pipe
++endif
++
++# Bsd 64bit machines use Dwarf2, which can be HUGE, have fastdebug use -g1
++DEBUG_FLAG = -g
++ifeq ($(FASTDEBUG), true)
++  ifeq ($(ARCH_DATA_MODEL), 64)
++    DEBUG_FLAG = -g1
++  endif
++endif
++
++# DEBUG_BINARIES overrides everything, use full -g debug information
++ifeq ($(DEBUG_BINARIES), true)
++  DEBUG_FLAG = -g
++  CFLAGS_REQUIRED += $(DEBUG_FLAG)
++endif
++
++CFLAGS_OPT      = $(CC_OPT)
++CFLAGS_DBG      = $(DEBUG_FLAG)
++CFLAGS_COMMON += $(CFLAGS_REQUIRED)
++
++CXXFLAGS_COMMON = $(GLOBAL_KPIC) -DCC_NOEX $(GCC_WARNINGS)
++CXXFLAGS_OPT	= $(CC_OPT)
++CXXFLAGS_DBG	= $(DEBUG_FLAG)
++CXXFLAGS_COMMON += $(CFLAGS_REQUIRED)
++
++# FASTDEBUG: Optimize the code in the -g versions, gives us a faster debug java
++ifeq ($(FASTDEBUG), true)
++  CFLAGS_DBG    += $(CC_OPT/$(FASTDEBUG_OPTIMIZATION_LEVEL))
++  CXXFLAGS_DBG	+= $(CC_OPT/$(FASTDEBUG_OPTIMIZATION_LEVEL))
++endif
++
++CPPFLAGS_COMMON = -D$(ARCH) -DARCH='"$(ARCH)"' -D_ALLBSD_SOURCE $(VERSION_DEFINES) \
++		  -D_LARGEFILE64_SOURCE -D_GNU_SOURCE -D_REENTRANT
++
++ifeq ($(ARCH_DATA_MODEL), 64)
++CPPFLAGS_COMMON += -D_LP64=1
++endif
++
++CPPFLAGS_OPT    = -DNDEBUG
++CPPFLAGS_DBG    = -DDEBUG
++ifneq ($(PRODUCT), java)
++  CPPFLAGS_DBG    += -DLOGGING 
++endif
++
++#
++# -L paths for finding and -ljava
++#
++LDFLAGS_COMMON += -L$(LIBDIR)/$(LIBARCH)
++
++ifneq ($(OS_VENDOR), Apple)
++LDFLAGS_OPT     = -Xlinker -O1
++LDFLAGS_COMMON += -Wl,-soname=$(LIB_PREFIX)$(LIBRARY).$(LIBRARY_SUFFIX)
++endif
++
++#
++# -static-libgcc is a gcc-3 flag to statically link libgcc, gcc-2.9x always
++# statically link libgcc but will print a warning with the flag. We don't 
++# want the warning, so check gcc version first.
++#
++CC_VER_MAJOR := $(shell $(CC) -dumpversion | $(SED) 's/egcs-//' | $(CUT) -d'.' -f1)
++ifeq ("$(CC_VER_MAJOR)", "3")
++OTHER_LDFLAGS  += -static-libgcc
++endif
++
++# Automatic precompiled header option to use (if COMPILE_APPROACH=batch)
++#   (See Rules.gmk) The gcc 5 compiler might have an option for this?
++AUTOMATIC_PCH_OPTION = 
++
++#
++# Post Processing of libraries/executables
++#
++ifeq ($(VARIANT), OPT)
++  ifneq ($(NO_STRIP), true)
++    ifneq ($(DEBUG_BINARIES), true)
++      # Debug 'strip -S' leaves local function Elf symbols (better stack
++      # traces)
++      POST_STRIP_PROCESS = $(STRIP) -S
++    endif
++  endif
++endif
++
++#
++# Use: ld $(LD_MAPFILE_FLAG) mapfile *.o
++#
++LD_MAPFILE_FLAG = -Xlinker --version-script -Xlinker
++
++# Darwin does not support linker map files.
++ifeq ($(OS_VENDOR), Apple)
++LDNOMAP=true
++endif
++
++#
++# Path and option to link against the VM, if you have to.  Note that
++# there are libraries that link against only -ljava, but they do get
++# -L to the -ljvm, this is because -ljava depends on -ljvm, whereas
++# the library itself should not.
++#
++VM_NAME         = server
++JVMLIB          = -L$(LIBDIR)/$(LIBARCH)/$(VM_NAME) -ljvm
++JAVALIB         = -ljava $(JVMLIB)
++
++#
++# We want to privatize JVM symbols on Solaris. This is so the user can
++# write a function called FindClass and this should not override the 
++# FindClass that is inside the JVM. At this point in time we are not
++# concerned with other JNI libraries because we hope that there will
++# not be as many clashes there.
++#
++PRIVATIZE_JVM_SYMBOLS = false
++
++USE_PTHREADS = true
++override ALT_CODESET_KEY         = _NL_CTYPE_CODESET_NAME
++override AWT_RUNPATH             =
++override HAVE_ALTZONE            = false
++override HAVE_FILIOH             = false
++override HAVE_GETHRTIME          = false
++override HAVE_GETHRVTIME         = false
++ifeq ($(OS_VENDOR),Apple)
++override HAVE_SIGIGNORE          = true
++endif
++override LEX_LIBRARY             = -lfl
++ifeq ($(STATIC_CXX),true)
++override LIBCXX                  = -Wl,-Bstatic -lstdc++ -lgcc -Wl,-Bdynamic
++else
++override LIBCXX                  = -lstdc++
++endif
++override LIBPOSIX4               =
++override LIBSOCKET               =
++override LIBTHREAD               =
++override MOOT_PRIORITIES         = true
++override NO_INTERRUPTIBLE_IO     = true
++override OPENWIN_HOME            = $(X11_PATH)
++override OPENWIN_LIB             = $(OPENWIN_HOME)/lib
++override OTHER_M4FLAGS           = -D__GLIBC__ -DGNU_ASSEMBLER
++override SUN_CMM_SUBDIR          =
++override THREADS_FLAG            = native
++override USE_GNU_M4              = true
++override USING_GNU_TAR           = true
++override WRITE_LIBVERSION        = false
++
++# USE_EXECNAME forces the launcher to look up argv[0] on $PATH, and put the
++# resulting resolved absolute name of the executable in the environment
++# variable EXECNAME.  That executable name is then used that to locate the
++# installation area.
++override USE_EXECNAME            = true
++
++# If your platform has DPS, it will have Type1 fonts too, in which case
++# it is best to enable DPS support until such time as 2D's rasteriser
++# can fully handle Type1 fonts in all cases. Default is "yes".
++# HAVE_DPS should only be "no" if the platform has no DPS headers or libs
++# DPS (Displayable PostScript) is available on Solaris machines
++HAVE_DPS = no
++
++SYSTEM_ZLIB = true
++
++#
++# Japanese manpages
++#
++JA_SOURCE_ENCODING = eucJP
++JA_TARGET_ENCODINGS = eucJP
++
++# Settings for the JDI - Serviceability Agent binding.
++HOTSPOT_SALIB_PATH   = $(HOTSPOT_IMPORT_PATH)/jre/lib/$(LIBARCH)
++SALIB_NAME = $(LIB_PREFIX)saproc.$(LIBRARY_SUFFIX)
++
++# The JDI - Serviceability Agent binding is not currently supported
++# on Bsd-ia64.
++ifeq ($(ARCH), ia64)
++  INCLUDE_SA = false
++else
++  INCLUDE_SA = true
++endif
++

@@ -1,0 +1,24 @@
+$NetBSD: patch-au,v 1.4 2013/10/14 06:51:02 adam Exp $
+
+--- src/commit.c.orig	2005-09-22 18:20:12.000000000 +0000
++++ src/commit.c
+@@ -1046,7 +1046,9 @@ warning: file `%s' seems to still contai
+             }
+ 
+ 	    li->tag = xstrdup (vers->tag);
+-	    li->rev_old = xstrdup (vers->vn_rcs);
++	    /* If the file was re-added, we want the revision in the commitlog
++	       to be NONE, not the previous dead revision. */
++	    li->rev_old = status == T_ADDED ? NULL : xstrdup (vers->vn_rcs);
+ 	    li->rev_new = NULL;
+ 	    p->data = li;
+ 	    (void) addnode (ulist, p);
+@@ -1271,7 +1273,7 @@ precommit_proc (const char *repository, 
+     run_setup (cmdline);
+     free (cmdline);
+ 
+-    return run_exec (RUN_TTY, RUN_TTY, RUN_TTY, RUN_NORMAL | RUN_REALLY);
++    return run_exec (RUN_TTY, RUN_TTY, RUN_TTY, RUN_NORMAL | RUN_REALLY | RUN_UNSETXID);
+ }
+ 
+ 

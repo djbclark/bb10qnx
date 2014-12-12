@@ -1,0 +1,15 @@
+$NetBSD$
+
+--- configure.orig	2012-09-28 19:45:16.000000000 +0000
++++ configure
+@@ -19685,7 +19685,9 @@ $as_echo "$ac_cv_search_clock_getres" >&
+ ac_res=$ac_cv_search_clock_getres
+ if test "$ac_res" != no; then :
+   test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
+-  THREAD_LIBS="$THREAD_LIBS -lrt"
++  if test "$ac_res" != "none required"; then :
++    THREAD_LIBS="$THREAD_LIBS -lrt"
++  fi
+ fi
+ 
+     { $as_echo "$as_me:${as_lineno-$LINENO}: checking for CLOCK_MONOTONIC" >&5

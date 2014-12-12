@@ -1,0 +1,69 @@
+$NetBSD$
+
+--- configure.ac.orig	2012-08-27 05:10:47.000000000 +0000
++++ configure.ac
+@@ -213,8 +213,10 @@ AC_SUBST(DLOPEN_LIBS)
+ 
+ dnl Checks for library functions.
+ AC_CHECK_FUNCS([backtrace ffs geteuid getuid issetugid getresuid \
+-	getdtablesize getifaddrs getpeereid getpeerucred getzoneid \
++	getdtablesize getpeerucred getzoneid \
+ 	mmap shmctl64 strncasecmp vasprintf vsnprintf walkcontext])
++AC_SEARCH_LIBS([getifaddrs], [socket])
++AC_SEARCH_LIBS([getpeereid], [socket])
+ AC_REPLACE_FUNCS([strcasecmp strcasestr strlcat strlcpy strndup])
+ 
+ dnl Find the math libary, then check for cbrt function in it.
+@@ -337,6 +339,8 @@ case $host_cpu in
+ 		*openbsd*)	AC_DEFINE(USE_I386_IOPL) 
+ 				SYS_LIBS=-li386
+ 				;;
++		*nto-qnx*)	SYS_LIBS=-ls5ipc
++				;;
+ 	esac
+         ;;
+   powerpc*)
+@@ -1057,7 +1061,7 @@ AM_CONDITIONAL(AIGLX_DRI_LOADER, { test 
+ 
+ if test "x$GLX_USE_TLS" = xyes ; then
+ 	GLX_DEFINES="-DGLX_USE_TLS -DPTHREADS"
+-	GLX_SYS_LIBS="$GLX_SYS_LIBS -lpthread"
++	GLX_SYS_LIBS="$GLX_SYS_LIBS $PTHREAD_LIBS"
+ fi
+ AC_SUBST([GLX_DEFINES])
+ 
+@@ -1592,7 +1596,7 @@ if test "x$XORG" = xyes; then
+ 	AC_DEFINE(XSERVER_LIBPCIACCESS, 1, [Use libpciaccess for all pci manipulation])
+ 	AC_DEFINE_DIR(PCI_TXT_IDS_PATH, PCI_TXT_IDS_DIR, [Default PCI text file ID path])
+ 	case $host_os in
+-	  gnu* | freebsd* | kfreebsd*-gnu | netbsd* | openbsd* | solaris* | dragonfly*)
++	  gnu* | freebsd* | kfreebsd*-gnu | netbsd* | openbsd* | solaris* | dragonfly* | *qnx*)
+ 		xorg_bus_bsdpci="yes"
+ 		;;
+ 	esac
+@@ -1687,11 +1691,16 @@ if test "x$XORG" = xyes; then
+ 	  gnu*)
+ 		XORG_OS_SUBDIR="hurd"
+ 		;;
++	  nto-qnx*)
++		XORG_OS="qnx"
++		XORG_OS_SUBDIR="nto"
++		xorg_bus_bsdpci="yes"
++		;;
+ 	  *)
+ 		XORG_OS_SUBDIR="stub"
+ 		AC_MSG_NOTICE([m4_text_wrap(m4_join([ ],
+ 		[Your OS is unknown. Xorg currently only supports Linux,],
+-		[Free/Open/Net/DragonFlyBSD, Solaris/OpenSolaris, & GNU Hurd.],
++		[Free/Open/Net/DragonFlyBSD, Solaris/OpenSolaris, QNX & GNU Hurd.],
+ 		[If you are interested in porting Xorg to your platform,],
+ 		[please email xorg@lists.freedesktop.org.]))])
+ 		;;
+@@ -2183,6 +2192,7 @@ hw/xfree86/os-support/bsd/Makefile
+ hw/xfree86/os-support/bus/Makefile
+ hw/xfree86/os-support/hurd/Makefile
+ hw/xfree86/os-support/misc/Makefile
++hw/xfree86/os-support/nto/Makefile
+ hw/xfree86/os-support/linux/Makefile
+ hw/xfree86/os-support/solaris/Makefile
+ hw/xfree86/os-support/stub/Makefile

@@ -1,0 +1,14 @@
+$NetBSD$
+
+--- main.c.orig	2008-03-27 06:21:16.000000000 +0000
++++ main.c
+@@ -137,7 +137,9 @@ catchSignal (int sig, RETSIGTYPE (*func)
+ 
+     memset (&sa, '\0', sizeof (struct sigaction));
+     sa.sa_handler = func;
++#ifdef SA_RESTART
+     sa.sa_flags = SA_RESTART;
++#endif
+     sigaction (sig, &sa, 0);
+ #else
+     signal (sig, func);

@@ -1,0 +1,13 @@
+$NetBSD$
+
+--- pith/charconv/utf8.c.orig	2008-04-02 17:09:20.000000000 -0500
++++ pith/charconv/utf8.c
+@@ -89,7 +89,7 @@ wcellwidth(UCS ucs)
+ 	    return((w & U4W_ERROR) ? -1 : w);
+ 	}
+     }
+-#ifndef _WINDOWS
++#ifdef HAVE_WCWIDTH
+     else
+       return(wcwidth((wchar_t) ucs));
+ #else

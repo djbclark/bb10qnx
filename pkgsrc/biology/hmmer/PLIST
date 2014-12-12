@@ -1,0 +1,13 @@
+@comment $NetBSD: PLIST,v 1.2 2013/07/21 15:58:51 wen Exp $
+bin/hmmalign
+bin/hmmbuild
+bin/hmmconvert
+bin/hmmemit
+bin/hmmfetch
+bin/hmmpress
+bin/hmmscan
+bin/hmmsearch
+bin/hmmsim
+bin/hmmstat
+bin/jackhmmer
+bin/phmmer

@@ -1,0 +1,14 @@
+$NetBSD$
+
+--- src/main.c.orig	2009-08-06 14:26:24.000000000 +0000
++++ src/main.c
+@@ -29,7 +29,9 @@
+ #include <stdlib.h>
+ #include <glib.h>
+ #include <gtk/gtk.h>
++#ifndef __QNXNTO__
+ #include <langinfo.h>
++#endif
+ #ifdef HAVE_LOCALE_H
+ #include <locale.h>
+ #endif

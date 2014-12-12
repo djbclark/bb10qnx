@@ -1,0 +1,21 @@
+$NetBSD$
+
+--- include/my_global.h.orig	2009-11-09 18:29:41.000000000 +0000
++++ include/my_global.h
+@@ -406,6 +406,8 @@ extern "C" int madvise(void *addr, size_
+ #undef  HAVE_FINITE
+ #undef  LONGLONG_MIN            /* These get wrongly defined in QNX 6.2 */
+ #undef  LONGLONG_MAX            /* standard system library 'limits.h' */
++#include <sys/neutrino.h>
++#if !defined(_NTO_VERSION) || (_NTO_VERSION < 640)
+ #ifdef __cplusplus
+ #ifndef HAVE_RINT
+ #define HAVE_RINT
+@@ -414,6 +416,7 @@ extern "C" int madvise(void *addr, size_
+ #define isnan(a) std::isnan(a)  /* in the usr/include/math.h on QNX     */
+ #endif
+ #endif
++#endif
+ 
+ /* We can not live without the following defines */
+ 

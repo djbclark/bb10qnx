@@ -1,0 +1,5 @@
+$NetBSD: distinfo,v 1.36 2013/07/04 16:24:02 wiz Exp $
+
+SHA1 (apr-1.4.8.tar.bz2) = 2dce90291b6d4072a6e47d096f5c81ae1ce76f9f
+RMD160 (apr-1.4.8.tar.bz2) = 081406aa06854c04fb029069b0299e00c3f51ae6
+Size (apr-1.4.8.tar.bz2) = 772927 bytes

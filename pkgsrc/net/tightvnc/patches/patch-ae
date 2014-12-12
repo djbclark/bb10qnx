@@ -1,0 +1,73 @@
+$NetBSD: patch-ae,v 1.4 2013/07/02 12:15:36 joerg Exp $
+
+--- Xvnc/config/imake/imakemdep.h.orig	2003-02-19 16:39:54.000000000 +0000
++++ Xvnc/config/imake/imakemdep.h
+@@ -222,56 +222,6 @@ in this Software without prior written a
+  *     If use cc -E but want a different compiler, define DEFAULT_CC.
+  *     If the cpp you need is not in /lib/cpp, define DEFAULT_CPP.
+  */
+-#ifdef hpux
+-#define USE_CC_E
+-#endif
+-#ifdef WIN32
+-#define USE_CC_E
+-#define DEFAULT_CC "cl"
+-#endif
+-#ifdef apollo
+-#define DEFAULT_CPP "/usr/lib/cpp"
+-#endif
+-#if defined(clipper) || defined(__clipper__)
+-#define DEFAULT_CPP "/usr/lib/cpp"
+-#endif
+-#if defined(_IBMR2) && !defined(DEFAULT_CPP)
+-#define DEFAULT_CPP "/usr/ccs/lib/cpp"
+-#endif
+-#if defined(sun) && (defined(SVR4) || defined(__svr4__) || defined(__SVR4) || defined(__sol__))
+-#define DEFAULT_CPP "/usr/ccs/lib/cpp"
+-#endif
+-#ifdef __bsdi__
+-#define DEFAULT_CPP "/usr/bin/cpp"
+-#endif
+-#ifdef __uxp__
+-#define DEFAULT_CPP "/usr/ccs/lib/cpp"
+-#endif
+-#ifdef __sxg__
+-#define DEFAULT_CPP "/usr/lib/cpp"
+-#endif
+-#ifdef _CRAY
+-#define DEFAULT_CPP "/lib/pcpp"
+-#endif
+-#if defined(__386BSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__FreeBSD__)
+-#define DEFAULT_CPP "/usr/libexec/cpp"
+-#endif
+-#if defined(__sgi) && defined(__ANSI_CPP__)
+-#define USE_CC_E
+-#endif
+-#ifdef  MACH
+-#define USE_CC_E
+-#endif
+-#ifdef __minix_vmd
+-#define DEFAULT_CPP "/usr/lib/cpp"
+-#endif
+-#if defined(__EMX__)
+-/* expects cpp in PATH */
+-#define DEFAULT_CPP "cpp"
+-#endif
+-#ifdef __MACH__
+-#define DEFAULT_CPP "/usr/bin/cpp"
+-#endif
+ 
+ /*
+  * Step 5:  cpp_argv
+@@ -290,6 +240,11 @@ in this Software without prior written a
+  *     that support multiple operating systems).
+  */
+ 
++#ifdef __NetBSD__
++#undef unix
++#define unix 42
++#endif
++
+ #define	ARGUMENTS 50	/* number of arguments in various arrays */
+ char *cpp_argv[ARGUMENTS] = {
+ 	"cc",		/* replaced by the actual program to exec */

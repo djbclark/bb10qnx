@@ -1,0 +1,18 @@
+$NetBSD: patch-ay,v 1.3 2013/10/14 06:51:02 adam Exp $
+
+--- src/run.c.orig	2008-05-07 15:57:34.000000000 +0000
++++ src/run.c
+@@ -237,6 +237,13 @@ run_exec (stin, stout, sterr, flags)
+ #endif
+     if (pid == 0)
+     {
++#ifdef SETXID_SUPPORT
++	if (flags & RUN_UNSETXID) {
++	    (void) setgid (getgid ());
++	    (void) setuid (getuid ());
++	}
++#endif
++
+ 	if (shin != 0)
+ 	{
+ 	    (void) dup2 (shin, 0);

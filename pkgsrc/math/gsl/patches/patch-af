@@ -1,0 +1,15 @@
+$NetBSD: patch-af,v 1.4 2013/07/21 20:11:11 wiz Exp $
+
+Tags: not-for-upstream
+
+--- siman/Makefile.in.orig	2013-07-19 15:14:55.000000000 +0000
++++ siman/Makefile.in
+@@ -95,7 +95,7 @@ CONFIG_HEADER = $(top_builddir)/config.h
+ CONFIG_CLEAN_FILES =
+ CONFIG_CLEAN_VPATH_FILES =
+ LTLIBRARIES = $(noinst_LTLIBRARIES)
+-libgslsiman_la_LIBADD =
++libgslsiman_la_LIBADD = -lm
+ am_libgslsiman_la_OBJECTS = siman.lo
+ libgslsiman_la_OBJECTS = $(am_libgslsiman_la_OBJECTS)
+ AM_V_lt = $(am__v_lt_@AM_V@)

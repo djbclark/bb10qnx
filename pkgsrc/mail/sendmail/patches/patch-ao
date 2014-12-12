@@ -1,0 +1,25 @@
+$NetBSD$
+
+--- devtools/OS/QNX.6.x.orig	2008-02-11 18:04:50.000000000 -0500
++++ devtools/OS/QNX.6.x
+@@ -6,13 +6,18 @@ dnl	Place personal settings in devtools/
+ define(`confMAPDEF', `-DMAP_REGEX')
+ define(`confLIBSEARCH', `db socket')
+ define(`confSM_OS_HEADER', `sm_os_qnx')
+-define(`confDEPEND_TYPE', `QNX6')
++
++dnl pkgsrc has been set up to handle the issue
++dnl that devtools/M4/depend/QNX6.m4 works around
++dnl so use the default `CC-M'
++dnl define(`confDEPEND_TYPE', `QNX6')
++
++define(`confDEPEND_TYPE', `CC-M')
+ define(`confSBINGRP', `root')
+ define(`confUBINOWN', `root')
+ define(`confUBINGRP', `root')
+ define(`confMANOWN', `root')
+ define(`confMANGRP', `root')
+-define(`confNO_MAN_BUILD', 'yes')
+ define(`confMAN1EXT', `0')
+ define(`confMAN3EXT', `0')
+ define(`confMAN4EXT', `0')

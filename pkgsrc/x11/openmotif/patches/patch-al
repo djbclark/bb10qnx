@@ -1,0 +1,21 @@
+$NetBSD$
+
+--- configure.orig	2008-05-04 04:30:36.000000000 +0000
++++ configure
+@@ -23553,9 +23553,16 @@ if test $ac_cv_header_langinfo_h = yes; 
+   :
+ else
+ 
++case $host_os in
++nto-qnx*)
++  # nothing
++  ;;
++*)
+ cat >>confdefs.h <<\_ACEOF
+ #define CSRG_BASED 1
+ _ACEOF
++;;
++esac
+ 
+ fi
+ 

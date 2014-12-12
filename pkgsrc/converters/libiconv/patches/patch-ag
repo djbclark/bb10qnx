@@ -1,0 +1,15 @@
+$NetBSD$
+
+--- include/iconv.h.build.in.orig	2009-06-30 20:51:58.000000000 +0000
++++ include/iconv.h.build.in
+@@ -64,6 +64,10 @@ typedef void* iconv_t;
+ #ifndef EILSEQ
+ #define EILSEQ @EILSEQ@
+ #endif
++#ifdef __QNXNTO__
++/* also included below in extern "C" {} block which breaks c++ on QNX */
++#include <wchar.h>
++#endif
+ 
+ 
+ #ifdef __cplusplus

@@ -1,0 +1,54 @@
+$NetBSD$
+
+--- src/osdep/unix/os_nto.c.orig	2006-08-30 21:54:31.000000000 -0400
++++ src/osdep/unix/os_nto.c
+@@ -38,7 +38,6 @@
+ #include <netdb.h>
+ #include <ctype.h>
+ #include <errno.h>
+-extern int errno;		/* just in case */
+ #include <pwd.h>
+ #include <shadow.h>
+ #include <sys/select.h>
+@@ -46,6 +45,17 @@ extern int errno;		/* just in case */
+ 
+ #define DIR_SIZE(d) d->d_reclen
+ 
++struct ustat {
++	int f_tinode;
++};
++
++int ustat(dev_t, struct ustat *);
++
++#define EX_USAGE	EXIT_FAILURE
++#define EX_NOPERM	EXIT_FAILURE
++#define EX_CANTCREAT	EXIT_FAILURE
++#define EX_OK		EXIT_FAILURE
++
+ #include "fs_unix.c"
+ #include "ftl_unix.c"
+ #include "nl_unix.c"
+@@ -56,21 +66,8 @@ extern int errno;		/* just in case */
+ #include "gethstid.c"
+ #include "flocksim.c"
+ #include "utime.c"
+-
+-/* QNX local readdir()
+- * Accepts: directory structure
+- * Returns: direct struct or NIL if failed
+- */
+-
+-#undef readdir
+ 
+-struct direct *Readdir (DIR *dirp)
++int ustat(dev_t dev, struct ustat *us)
+ {
+-  static struct direct dc;
+-  struct dirent *de = readdir (dirp);
+-  if (!de) return NIL;		/* end of data */
+-  dc.d_fileno = 0;		/* could get from de->stat.st_ino */
+-  dc.d_namlen = strlen (strcpy (dc.d_name,de->d_name));
+-  dc.d_reclen = sizeof (dc);
+-  return &dc;
++	return -1;
+ }

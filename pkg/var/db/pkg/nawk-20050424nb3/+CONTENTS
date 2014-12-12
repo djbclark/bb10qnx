@@ -1,0 +1,7 @@
+@cwd /accounts/devuser/pkg
+@name nawk-20050424nb3
+@comment $NetBSD: PLIST,v 1.1 2001/11/01 00:24:19 zuntum Exp $
+bin/nawk
+@comment MD5:72d99564fbe70031a7d870db4bdd53ce
+man/man1/nawk.1
+@comment MD5:46e4aba2c2723f6efb651096e76c3f9a

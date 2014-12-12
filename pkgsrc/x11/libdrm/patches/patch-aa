@@ -1,0 +1,16 @@
+$NetBSD$
+
+--- include/drm/drm.h.orig	2010-03-05 23:21:13.000000000 +0000
++++ include/drm/drm.h
+@@ -44,7 +44,11 @@ typedef unsigned int drm_handle_t;
+ 
+ #else /* One of the BSDs */
+ 
++#ifndef __QNXNTO__
+ #include <sys/ioccom.h>
++#else
++#include <sys/ioctl.h>
++#endif
+ #include <sys/types.h>
+ typedef int8_t   __s8;
+ typedef uint8_t  __u8;

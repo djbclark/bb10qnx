@@ -1,0 +1,32 @@
+$NetBSD$
+Collision with _UP in qnx's <ctype.h>
+
+--- lib/Xm/PanedW.c.orig	2003-10-06 05:10:24.000000000 -0500
++++ lib/Xm/PanedW.c
+@@ -134,7 +134,7 @@ typedef enum {FirstPane='U', LastPane='L
+    are processing using reptype. */
+ enum { _START, _MOVE, _COMMIT, _KEY };
+ enum { _DEFAULT_INCR, _LARGE_INCR };
+-enum { _UP, _DOWN, _RIGHT, _LEFT, _FIRST, _LAST };
++enum { _UP_MTF, _DOWN_MTF, _RIGHT_MTF, _LEFT_MTF, _FIRST_MTF, _LAST_MTF };
+ 
+ /********    Static Function Declarations    ********/
+ 
+@@ -1459,7 +1459,7 @@ HandleSash(
+ 	      return;
+ 	    
+ 	    /* Have to track Up or Left */
+-	    if (direction_param == _UP || direction_param == _LEFT)
++	    if (direction_param == _UP_MTF || direction_param == _LEFT_MTF)
+ 	    {
+ 		if (increment_param == _LARGE_INCR)
+ 		  increment = -10;
+@@ -1467,7 +1467,7 @@ HandleSash(
+ 		  increment = -1;
+ 	    }
+ 	    /* Have to track Down or Right */
+-	    else if (direction_param == _DOWN || direction_param == _RIGHT)
++	    else if (direction_param == _DOWN_MTF || direction_param == _RIGHT_MTF)
+ 	    {
+ 		if (increment_param == _LARGE_INCR)
+ 		  increment = 10;

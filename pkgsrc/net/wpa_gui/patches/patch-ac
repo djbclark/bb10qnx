@@ -1,0 +1,18 @@
+$NetBSD$
+
+--- src/utils/common.h.orig	2009-03-23 14:06:28.000000000 +0000
++++ src/utils/common.h
+@@ -52,6 +52,13 @@ static inline unsigned int bswap_32(unsi
+ }
+ #endif /* __APPLE__ */
+ 
++#ifdef __QNXNTO__
++#include <sys/param.h>
++#define __BYTE_ORDER	BYTE_ORDER
++#define __LITTLE_ENDIAN	LITTLE_ENDIAN
++#define __BIG_ENDIAN	BIG_ENDIAN
++#endif
++
+ #ifdef CONFIG_TI_COMPILER
+ #define __BIG_ENDIAN 4321
+ #define __LITTLE_ENDIAN 1234

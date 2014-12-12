@@ -1,0 +1,14 @@
+$NetBSD$
+
+--- configure.orig	2009-01-09 09:25:52.000000000 -0500
++++ configure
+@@ -6547,6 +6547,9 @@ cat >>conftest.$ac_ext <<_ACEOF
+ 
+ #include <stdio.h>
+ extern "C" { void fileno(int); }
++#ifdef __QNXNTO__
++extern "C" { namespace std { void fileno(int); } }
++#endif
+ 
+ 
+ int

@@ -1,0 +1,35 @@
+$NetBSD: patch-ae,v 1.2 2010/08/13 14:25:35 taca Exp $
+
+* check sizeof time_t.
+* check existence of sigsend().
+
+--- configure.in.orig	2011-12-16 19:06:00.000000000 +0000
++++ configure.in
+@@ -1200,6 +1200,10 @@ EOF
+     echo "done"
+ 
+     ;;
++  *qnx[[68]]*)
++    # No thread library - in LibC
++    with_named_thread=""
++    ;;
+ esac
+ 
+ 
+@@ -1877,6 +1881,7 @@ if test "$ac_cv_sizeof_off_t" -eq 0
+ then
+   AC_MSG_ERROR("MySQL needs a off_t type.")
+ fi
++AC_CHECK_SIZEOF(time_t, 4)
+ 
+ dnl
+ dnl check if time_t is unsigned
+@@ -1979,7 +1984,7 @@ AC_CHECK_HEADERS(varargs.h stdarg.h dire
+ paths.h semaphore.h)
+ 
+ # Already-done: strcasecmp
+-AC_CHECK_FUNCS(lstat putenv select setenv setlocale strcoll tcgetattr)
++AC_CHECK_FUNCS(lstat putenv select setenv setlocale sigsend strcoll tcgetattr)
+ 
+ AC_STAT_MACROS_BROKEN
+ MYSQL_SIGNAL_CHECK

@@ -1,0 +1,72 @@
+
+# Empty out the command buffer and build up the command line in $cmd.
+while ! queue_is_empty cmdbuf; do
+	pop_queue cmdbuf arg
+	$debug_log $wrapperlog "    (cmd-sink-qnx-cc) pop: $arg"
+	case $arg in
+	##############################################################
+	# qcc doesn't like spaces so take them out
+	##############################################################
+	-Wp,-MT|-Wp,-MF)
+		pop_queue cmdbuf arg2
+		$debug_log $wrapperlog "    (cmd-sink-qnx-cc) pop: $arg2"
+		$debug_log $wrapperlog "    (cmd-sink-darwin-xlc) pre: $arg$arg2"
+		prepend_queue cmdbuf "$arg$arg2"
+		;;
+
+	-dumpversion)
+		if $test -z "$dmpver2"; then
+			dmpver1=1
+		fi
+		;;
+
+	--version)
+		if $test -z "$dmpver1"; then
+			dmpver2=1
+		fi
+		;;
+
+	-print-search-dirs)
+		psdirs=1
+		;;
+
+	-print-prog-name=ld)
+		ppnld=1
+		;;
+
+	-fPIC)
+		fpic=1
+		. $buildcmd
+		;;
+
+	-c)
+		cmpl=1
+		. $buildcmd
+		;;
+
+	*)
+		. $buildcmd
+		;;
+	esac
+done
+
+# filter out -fPIC if no -c otherwise qcc makes a shared lib
+if $test -n "$fpic" && $test -z "$cmpl"; then
+	cmd=`$echo $cmd | $sed -e 's/-fPIC//'`
+fi
+
+
+# gcc seems to give -dumpversion precedence
+if $test -n "$dmpver1"; then
+	qcc -V 2>&1 | $sed -ne 's/default/&/p' | $sed -e 's/^[ 	]*//' | $sed -e 's/\(.*\),.*/\1/'
+	cmd=true
+elif $test -n "$dmpver2"; then
+	$echo "cc (GCC) `qcc -V 2>&1 | $sed -ne 's/default/&/p' | $sed -e 's/^[ 	]*//' | $sed -e 's/\(.*\),.*/\1/'` (QNX)"
+	cmd=true
+elif $test -n "$psdirs"; then
+	$echo "libraries: =/lib:/usr/lib"
+	cmd=true
+elif $test -n "$ppnld"; then
+	$echo "ld"
+	cmd=true
+fi

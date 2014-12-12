@@ -1,0 +1,17 @@
+$NetBSD$
+
+--- mkspecs/common/posix/qplatformdefs.h.orig	2010-11-06 01:55:11.000000000 +0000
++++ mkspecs/common/posix/qplatformdefs.h
+@@ -143,8 +143,12 @@
+         && !defined(QT_NO_READDIR64)
+ #define QT_DIRENT               struct dirent64
+ #define QT_READDIR              ::readdir64
++#ifndef __QNXNTO__
+ #define QT_READDIR_R            ::readdir64_r
+ #else
++#define QT_READDIR_R(a, b, c)   ::readdir_r(a, (struct dirent *)(b), (struct dirent **)(c))	/* QNX PR 84635 */
++#endif
++#else
+ #define QT_DIRENT               struct dirent
+ #define QT_READDIR              ::readdir
+ #define QT_READDIR_R            ::readdir_r

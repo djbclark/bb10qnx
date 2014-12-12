@@ -1,0 +1,27 @@
+$NetBSD: patch-js_src_Makefile.in,v 1.1 2013/05/23 13:12:13 ryoon Exp $
+
+--- js/src/Makefile.in.orig	2013-06-18 11:01:23.000000000 +0000
++++ js/src/Makefile.in
+@@ -705,7 +705,7 @@ RESFILE = ETWProvider.res
+ endif
+ 
+ # HP-UX does not require the extra linking of "-lm"
+-ifeq (,$(filter HP-UX WINNT OS2,$(OS_ARCH)))
++ifeq (,$(filter HP-UX WINNT OS2 QNX,$(OS_ARCH)))
+ EXTRA_LIBS	+= -lm
+ endif
+ 
+@@ -775,6 +775,13 @@ EXTRA_LIBS	+= -lposix4 -ldl -lnsl -lsock
+ endif
+ endif
+ 
++# clang 3.3 + -O2 makes jaeger crash in FixupArity
++ifdef CLANG_CXX
++ifndef MOZ_DEBUG
++Compiler.$(OBJ_SUFFIX): CXXFLAGS += -fno-inline-functions
++endif
++endif
++
+ # An AIX Optimization bug causes PR_dtoa() & JS_dtoa to produce wrong result.
+ # This suppresses optimization for this single compilation unit.
+ ifeq ($(OS_ARCH),AIX)

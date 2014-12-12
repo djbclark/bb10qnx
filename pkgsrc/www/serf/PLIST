@@ -1,0 +1,6 @@
+@comment $NetBSD: PLIST,v 1.4 2013/07/04 17:17:28 wiz Exp $
+include/serf-1/serf.h
+include/serf-1/serf_bucket_types.h
+include/serf-1/serf_bucket_util.h
+lib/libserf-1.la
+lib/pkgconfig/serf-1.pc

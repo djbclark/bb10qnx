@@ -1,0 +1,28 @@
+$NetBSD: patch-ao,v 1.1 2009/01/20 10:08:17 sketch Exp $
+
+--- src/polkit-dbus/polkit-read-auth-helper.c.orig	2008-05-30 21:24:44.000000000 +0000
++++ src/polkit-dbus/polkit-read-auth-helper.c
+@@ -159,7 +159,9 @@ static polkit_bool_t
+ dump_auths_all (const char *root)
+ {
+         DIR *dir;
++#if 0 /* dirfd() isn't portable; however int dfd isn't even used below */
+         int dfd;
++#endif
+ #ifdef HAVE_READDIR64
+         struct dirent64 *d;
+ #else
+@@ -175,11 +177,13 @@ dump_auths_all (const char *root)
+                 goto out;
+         }
+ 
++#if 0
+         dfd = dirfd (dir);
+         if (dfd == -1) {
+                 fprintf (stderr, "polkit-read-auth-helper: error calling dirfd(): %m\n");
+                 goto out;
+         }
++#endif
+ 
+ #ifdef HAVE_READDIR64
+         while ((d = readdir64(dir)) != NULL) {

@@ -1,0 +1,509 @@
+$NetBSD$
+
+--- src/nto_pci.c.orig	2013-10-15 15:33:06.000000000 +0000
++++ src/nto_pci.c
+@@ -0,0 +1,504 @@
++/*
++ * Based on netbsd_pci.c
++ * 
++ * Copyright (c) 2009 Xiaodan Tang
++ * Copyright (c) 2008 Juan Romero Pardines
++ * Copyright (c) 2008 Mark Kettenis
++ *
++ * Permission to use, copy, modify, and distribute this software for any
++ * purpose with or without fee is hereby granted, provided that the above
++ * copyright notice and this permission notice appear in all copies.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
++ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
++ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
++ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
++ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
++ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
++ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
++ */
++#include <errno.h>
++#include <fcntl.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <unistd.h>
++#include <sys/mman.h>
++
++#include <hw/pci.h>
++#include <hw/inout.h>
++
++#include "pciaccess.h"
++#include "pciaccess_private.h"
++
++// these defs comes from NetBSD's pcireg.h file
++#define PCI_ID_REG                  0x00
++#define PCI_CLASS_REG               0x08
++#define PCI_BHLC_REG                0x0c
++#define PCI_SUBSYS_ID_REG           0x2c
++#define PCI_HDRTYPE(bhlcr)          (((bhlcr) >> 16) & 0xff)
++#define PCI_HDRTYPE_TYPE(bhlcr)     (PCI_HDRTYPE(bhlcr) & 0x7f)
++#define PCI_HDRTYPE_MULTIFN(bhlcr)  ((PCI_HDRTYPE(bhlcr) & 0x80) != 0)
++#define PCI_MAPREG_START            0x10
++#define PCI_MAPREG_END              0x28
++#define PCI_MAPREG_TYPE(mr)         ((mr) & 0x00000001)
++#define PCI_MAPREG_TYPE_MEM         0x00000000
++#define PCI_MAPREG_TYPE_IO          0x00000001
++#define PCI_MAPREG_IO_ADDR(mr)      ((mr) & 0xfffffffc)
++#define PCI_MAPREG_IO_SIZE(mr)      (PCI_MAPREG_IO_ADDR(mr) & -PCI_MAPREG_IO_ADDR(mr))
++#define PCI_MAPREG_MEM_PREFETCHABLE(mr) \
++		  (((mr) & 0x00000008) != 0)
++#define PCI_MAPREG_MEM_TYPE(mr)     ((mr) & 0x00000006)
++#define PCI_MAPREG_MEM_TYPE_32BIT    0x00000000
++#define PCI_MAPREG_MEM_TYPE_32BIT_1M 0x00000002
++#define PCI_MAPREG_MEM_TYPE_64BIT    0x00000004
++#define PCI_MAPREG_MEM_ADDR(mr)     ((mr) & 0xfffffff0)
++#define PCI_MAPREG_MEM_SIZE(mr)   \
++		(PCI_MAPREG_MEM_ADDR(mr) & -PCI_MAPREG_MEM_ADDR(mr))
++#define PCI_MAPREG_MEM64_ADDR(mr)   ((mr) & 0xfffffffffffffff0ULL)
++#define PCI_MAPREG_MEM64_SIZE(mr) \
++			(PCI_MAPREG_MEM64_ADDR(mr) & -PCI_MAPREG_MEM64_ADDR(mr))
++#define PCI_VENDOR(id)              (((id) >> 0) & 0xffff)
++#define PCI_VENDOR_INVALID          0xffff
++#define PCI_PRODUCT(id)             (((id) >> 16) & 0xffff)
++#ifdef  PCI_CLASS
++#undef  PCI_CLASS
++#define PCI_CLASS(cr)               (((cr) >> 24) & 0xff)
++#endif
++#ifdef  PCI_SUBCLASS
++#undef  PCI_SUBCLASS
++#define PCI_SUBCLASS(cr)            (((cr) >> 16) & 0xff)
++#endif
++#ifdef  PCI_INTERFACE
++#undef  PCI_INTERFACE
++#define PCI_INTERFACE(cr)           (((cr) >> 8)  & 0xff)
++#endif
++#define PCI_REVISION(cr)            (((cr) >> 0)  & 0xff)
++
++static int pcihdl;
++
++static int
++pci_read(int bus, int dev, int func, uint32_t reg, uint32_t *val)
++{
++	uint32_t rval;
++	int df = (dev << 3) | func;
++	
++	if (pci_read_config32(bus, df, reg, 1, &rval) == -1)
++	  return (-1);
++
++	*val = rval;
++
++	return 0;
++}
++
++static int
++pci_write(int bus, int dev, int func, uint32_t reg, uint32_t val)
++{
++	int df = (dev << 3) | func;
++	
++	return pci_write_config32(bus, df, reg, 1, &val);
++}
++
++static int
++pci_nfuncs(int bus, int dev)
++{
++	uint32_t hdr;
++	
++	if (pci_read(bus, dev, 0, PCI_BHLC_REG, &hdr) != 0)
++		return -1;
++
++	return (PCI_HDRTYPE_MULTIFN(hdr) ? 8 : 1);
++}
++
++static int
++pci_device_nto_map_range(struct pci_device *dev,
++    struct pci_device_mapping *map)
++{
++	int prot, ret = 0;
++
++	prot = PROT_READ;
++
++	if (map->flags & PCI_DEV_MAP_FLAG_WRITABLE)
++		prot |= PROT_WRITE;
++
++	map->memory = mmap_device_memory(NULL, map->size, prot, 0, map->base);
++	if (map->memory == MAP_FAILED)
++		return errno;
++
++	return ret;
++}
++
++static int
++pci_device_nto_unmap_range(struct pci_device *dev,
++    struct pci_device_mapping *map)
++{
++	return munmap_device_memory(map->memory, map->size);
++}
++
++static int
++pci_device_nto_read(struct pci_device *dev, void *data,
++    pciaddr_t offset, pciaddr_t size, pciaddr_t *bytes_read)
++{
++	int df = (dev->dev << 3) | dev->func;
++	int rval;
++
++	*bytes_read = 0;
++	while (size > 0) {
++		int toread = min(size, 100);
++
++		rval = pci_read_config8(dev->bus, df, offset, toread, data);
++		if (rval != PCI_SUCCESS) {
++			fprintf(stderr, "Failed pci_read_config8(): %d\n", rval);
++			return rval;
++		}
++		
++		offset += toread;
++		data = (char *)data + toread;
++		size -= toread;
++		*bytes_read += toread;
++	}
++
++	return 0;
++}
++
++static int
++pci_device_nto_write(struct pci_device *dev, const void *data,
++    pciaddr_t offset, pciaddr_t size, pciaddr_t *bytes_written)
++{
++	int df = (dev->dev << 3) | dev->func;
++	int rval;
++
++	if ((offset % 4) != 0 || (size % 4) != 0)
++		return EINVAL;
++
++	*bytes_written = 0;
++	while (size > 0) {
++		int towrite = min(size, 100);
++
++		rval = pci_write_config8(dev->bus, df, offset, towrite, data);
++		if (rval != PCI_SUCCESS) {
++			fprintf(stderr, "Failed pci_read_config8(): %d\n", rval);
++			return rval;
++		}
++		
++		offset += towrite;
++		data = (const char *)data + towrite;
++		size -= towrite;
++		*bytes_written += towrite;
++	}
++
++	return 0;
++}
++
++static int
++pci_device_nto_read_rom(struct pci_device *device, void *buf)
++{
++	char *ptr;
++	
++	ptr = mmap(NULL, 64*1024, PROT_READ, MAP_PHYS, NOFD, 0xc0000);
++	if (ptr == MAP_FAILED) {
++		return errno;
++	}
++	
++	memcpy(buf, ptr, 64*1024);
++	return 0;
++}
++
++static void
++pci_system_nto_destroy(void)
++{
++	pci_detach(pcihdl);
++	free(pci_sys);
++	pci_sys = NULL;
++}
++
++static int
++pci_device_nto_probe(struct pci_device *device)
++{
++	struct pci_device_private *priv = (struct pci_device_private *)device;
++	struct pci_mem_region *region;
++	uint64_t reg64, size64;
++	uint32_t bar, reg, size;
++	int bus, dev, func, err;
++
++	bus = device->bus;
++	dev = device->dev;
++	func = device->func;
++
++	err = pci_read(bus, dev, func, PCI_BHLC_REG, &reg);
++	if (err)
++		return err;
++	
++	priv->header_type = PCI_HDRTYPE_TYPE(reg);
++	if (priv->header_type != 0)
++		return 0;
++	
++	region = device->regions;
++	for (bar = PCI_MAPREG_START; bar < PCI_MAPREG_END;
++	     bar += sizeof(uint32_t), region++) {
++		err = pci_read(bus, dev, func, bar, &reg);
++		if (err)
++			return err;
++
++		/* Probe the size of the region. */
++		err = pci_write(bus, dev, func, bar, ~0);
++		if (err)
++			return err;
++		pci_read(bus, dev, func, bar, &size);
++		pci_write(bus, dev, func, bar, reg);
++
++		if (PCI_MAPREG_TYPE(reg) == PCI_MAPREG_TYPE_IO) {
++			region->is_IO = 1;
++			region->base_addr = PCI_MAPREG_IO_ADDR(reg);
++			region->size = PCI_MAPREG_IO_SIZE(size);
++		} else {
++			if (PCI_MAPREG_MEM_PREFETCHABLE(reg))
++				region->is_prefetchable = 1;
++			switch(PCI_MAPREG_MEM_TYPE(reg)) {
++			case PCI_MAPREG_MEM_TYPE_32BIT:
++			case PCI_MAPREG_MEM_TYPE_32BIT_1M:
++				region->base_addr = PCI_MAPREG_MEM_ADDR(reg);
++				region->size = PCI_MAPREG_MEM_SIZE(size);
++				break;
++			case PCI_MAPREG_MEM_TYPE_64BIT:
++				region->is_64 = 1;
++
++				reg64 = reg;
++				size64 = size;
++
++				bar += sizeof(uint32_t);
++
++				err = pci_read(bus, dev, func, bar, &reg);
++				if (err)
++					return err;
++				reg64 |= (uint64_t)reg << 32;
++
++				err = pci_write(bus, dev, func, bar, ~0);
++				if (err)
++					return err;
++				pci_read(bus, dev, func, bar, &size);
++				pci_write(bus, dev, func, bar, reg64 >> 32);
++				size64 |= (uint64_t)size << 32;
++
++				region->base_addr = PCI_MAPREG_MEM64_ADDR(reg64);
++				region->size = PCI_MAPREG_MEM64_SIZE(size64);
++				region++;
++				break;
++			}
++		}
++	}
++
++	return 0;
++}
++
++static struct pci_io_handle *
++pci_device_nto_open_legacy_io(struct pci_io_handle *ret,
++    struct pci_device *dev, pciaddr_t base, pciaddr_t size)
++{
++	ret->base = base;
++	ret->size = size;
++	return ret;
++}
++
++static uint32_t
++pci_device_nto_read32(struct pci_io_handle *handle, uint32_t reg)
++{
++#if defined(__i386__) || defined(__amd64__)
++	return in32(handle->base + reg);
++#else
++	return *(uint32_t *)((uintptr_t)handle->memory + reg);
++#endif
++}
++
++static uint16_t
++pci_device_nto_read16(struct pci_io_handle *handle, uint32_t reg)
++{
++#if defined(__i386__) || defined(__amd64__)
++	return in16(handle->base + reg);
++#else
++	return *(uint16_t *)((uintptr_t)handle->memory + reg);
++#endif
++}
++
++static uint8_t
++pci_device_nto_read8(struct pci_io_handle *handle, uint32_t reg)
++{
++#if defined(__i386__) || defined(__amd64__)
++	return in8(handle->base + reg);
++#else
++	return *(uint8_t *)((uintptr_t)handle->memory + reg);
++#endif
++}
++
++static void
++pci_device_nto_write32(struct pci_io_handle *handle, uint32_t reg,
++    uint32_t data)
++{
++#if defined(__i386__) || defined(__amd64__)
++	out32(handle->base + reg, data);
++#else
++	*(uint16_t *)((uintptr_t)handle->memory + reg) = data;
++#endif
++}
++
++static void
++pci_device_nto_write16(struct pci_io_handle *handle, uint32_t reg,
++    uint16_t data)
++{
++#if defined(__i386__) || defined(__amd64__)
++	out16(handle->base + reg, data);
++#else
++	*(uint8_t *)((uintptr_t)handle->memory + reg) = data;
++#endif
++}
++
++static void
++pci_device_nto_write8(struct pci_io_handle *handle, uint32_t reg,
++    uint8_t data)
++{
++#if defined(__i386__) || defined(__amd64__)
++	out8(handle->base + reg, data);
++#else
++	*(uint32_t *)((uintptr_t)handle->memory + reg) = data;
++#endif
++}
++static int
++pci_device_nto_map_legacy(struct pci_device *dev, pciaddr_t base,
++    pciaddr_t size, unsigned map_flags, void **addr)
++{
++	struct pci_device_mapping map;
++	int err;
++
++	map.base = base;
++	map.size = size;
++	map.flags = map_flags;
++	map.memory = NULL;
++	err = pci_device_nto_map_range(dev, &map);
++	*addr = map.memory;
++
++	return err;
++}
++
++static int
++pci_device_nto_unmap_legacy(struct pci_device *dev, void *addr, pciaddr_t size)
++{
++	struct pci_device_mapping map;
++
++	map.memory = addr;
++	map.size = size;
++	map.flags = 0;
++	return pci_device_nto_unmap_range(dev, &map);
++}
++
++static const struct pci_system_methods nto_pci_methods = {
++	.destroy =		pci_system_nto_destroy,
++	.destroy_device =	NULL,
++	.read_rom =		pci_device_nto_read_rom,
++	.probe =		pci_device_nto_probe,
++	.map_range =		pci_device_nto_map_range,
++	.unmap_range =		pci_device_nto_unmap_range,
++	.read =			pci_device_nto_read,
++	.write =		pci_device_nto_write,
++	.fill_capabilities =	pci_fill_capabilities_generic,
++	.enable =		NULL,
++	.boot_vga =		NULL,
++	.has_kernel_driver =	NULL,
++	.open_device_io =	NULL,
++	.open_legacy_io =	pci_device_nto_open_legacy_io,
++	.close_io =		NULL,
++	.read32 =		pci_device_nto_read32,
++	.read16 =		pci_device_nto_read16,
++	.read8 =		pci_device_nto_read8,
++	.write32 =		pci_device_nto_write32,
++	.write16 =		pci_device_nto_write16,
++	.write8 =		pci_device_nto_write8,
++	.map_legacy =		pci_device_nto_map_legacy,
++	.unmap_legacy =		pci_device_nto_unmap_legacy,
++};
++
++int
++pci_system_nto_create(void)
++{
++	struct pci_device_private *device;
++	int bus, dev, func, ndevs, nfuncs;
++	uint32_t reg;
++
++	pcihdl = pci_attach(0);
++	if (pcihdl == -1)
++		return ENXIO;
++
++	pci_sys = calloc(1, sizeof(struct pci_system));
++	if (pci_sys == NULL) {
++		pci_detach(pcihdl);
++		return ENOMEM;
++	}
++
++	pci_sys->methods = &nto_pci_methods;
++
++	ndevs = 0;
++	for (bus = 0; bus < 256; bus++) {
++		for (dev = 0; dev < 32; dev++) {
++			nfuncs = pci_nfuncs(bus, dev);
++			for (func = 0; func < nfuncs; func++) {
++				if (pci_read(bus, dev, func, PCI_ID_REG,
++				    &reg) != 0)
++					continue;
++				if (PCI_VENDOR(reg) == PCI_VENDOR_INVALID ||
++				    PCI_VENDOR(reg) == 0)
++					continue;
++
++				ndevs++;
++			}
++		}
++	}
++
++	pci_sys->num_devices = ndevs;
++	pci_sys->devices = calloc(ndevs, sizeof(struct pci_device_private));
++	if (pci_sys->devices == NULL) {
++		free(pci_sys);
++		pci_detach(pcihdl);
++		return ENOMEM;
++	}
++
++	device = pci_sys->devices;
++	for (bus = 0; bus < 256; bus++) {
++		for (dev = 0; dev < 32; dev++) {
++			nfuncs = pci_nfuncs(bus, dev);
++			for (func = 0; func < nfuncs; func++) {
++				if (pci_read(bus, dev, func, PCI_ID_REG,
++				    &reg) != 0)
++					continue;
++				if (PCI_VENDOR(reg) == PCI_VENDOR_INVALID ||
++				    PCI_VENDOR(reg) == 0)
++					continue;
++
++				device->base.domain = 0;
++				device->base.bus = bus;
++				device->base.dev = dev;
++				device->base.func = func;
++				device->base.vendor_id = PCI_VENDOR(reg);
++				device->base.device_id = PCI_PRODUCT(reg);
++
++				if (pci_read(bus, dev, func, PCI_CLASS_REG,
++				    &reg) != 0)
++					continue;
++
++				device->base.device_class =
++				    PCI_INTERFACE(reg) | PCI_CLASS(reg) << 16 |
++				    PCI_SUBCLASS(reg) << 8;
++				device->base.revision = PCI_REVISION(reg);
++
++				if (pci_read(bus, dev, func, PCI_SUBSYS_ID_REG,
++				    &reg) != 0)
++					continue;
++
++				device->base.subvendor_id = PCI_VENDOR(reg);
++				device->base.subdevice_id = PCI_PRODUCT(reg);
++
++				device++;
++			}
++		}
++	}
++
++	return 0;
++}

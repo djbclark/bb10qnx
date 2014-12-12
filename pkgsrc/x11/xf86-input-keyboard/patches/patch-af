@@ -1,0 +1,203 @@
+$NetBSD$
+
+--- src/nto_kbd.c.orig	2012-10-05 18:11:02.000000000 +0000
++++ src/nto_kbd.c
+@@ -0,0 +1,198 @@
++/*
++ * Copyright (c) 2009 
++ * Author: Xiaodan Tang
++ */
++
++#define NEED_EVENTS
++
++#ifdef HAVE_CONFIG_H
++#include "config.h"
++#endif
++
++#include <X11/X.h>
++#include <termios.h>
++
++#include "compiler.h"
++
++#include "xf86.h"
++#include "xf86Priv.h"
++#include "xf86_OSlib.h"
++
++#include "xf86Xinput.h"
++#include "xf86OSKbd.h"
++#include "atKeynames.h"
++
++#include <sys/dcmd_input.h>
++#include <sys/keycodes.h>
++
++extern void KbdGetMapping(InputInfoPtr pInfo, KeySymsPtr pKeySyms,
++                          CARD8 *pModMap);
++
++#define PATH_HID_KEYBOARD  "/dev/devi/keyboard0"
++#define PROT_HID           (PROT_UNKNOWN_KBD + 1)
++
++static KbdProtocolRec protocols[] = {
++   {"hid", PROT_HID },
++   { NULL, PROT_UNKNOWN_KBD }
++};
++
++typedef struct {
++   struct termios kbdtty;
++} NtoKbdPrivRec, *NtoKbdPrivPtr;
++
++static
++int KbdInit(InputInfoPtr pInfo, int what)
++{
++    return Success;
++}
++
++static void
++SetKbdLeds(InputInfoPtr pInfo, int leds)
++{
++    KbdDevPtr pKbd = (KbdDevPtr) pInfo->private;
++    int real_leds = 0;
++
++#ifdef LED_CAP
++    if (leds & XLED1)  real_leds |= LED_CAP;
++#endif
++#ifdef LED_NUM
++    if (leds & XLED2)  real_leds |= LED_NUM;
++#endif
++#ifdef LED_SCR
++    if (leds & XLED3)  real_leds |= LED_SCR;
++    if (leds & XLED4)  real_leds |= LED_SCR;
++#endif
++
++	// How to flip LEDs ? 
++}
++
++static int
++GetKbdLeds(InputInfoPtr pInfo)
++{
++    KbdDevPtr pKbd = (KbdDevPtr) pInfo->private;
++    int leds = 0, real_leds = 0;
++
++	// Get LED status into real_leds;
++
++#ifdef LED_CAP
++    if (real_leds & LED_CAP) leds |= XLED1;
++#endif
++#ifdef LED_NUM
++    if (real_leds & LED_NUM) leds |= XLED2;
++#endif
++#ifdef LED_SCR
++    if (real_leds & LED_SCR) leds |= XLED3;
++#endif
++
++    return(leds);
++}
++
++static int
++KbdOn(InputInfoPtr pInfo, int what)
++{
++    return Success;
++}
++
++static int
++KbdOff(InputInfoPtr pInfo, int what)
++{
++    return Success;
++}
++
++static void
++SoundBell(InputInfoPtr pInfo, int loudness, int pitch, int duration)
++{
++    KbdDevPtr pKbd = (KbdDevPtr) pInfo->private;
++
++    if (loudness && pitch) {
++    }
++}
++
++
++static void
++hidReadInput(InputInfoPtr pInfo)
++{
++    KbdDevPtr pKbd = (KbdDevPtr) pInfo->private;
++	struct _keyboard_packet kb;
++    int nBytes, i;
++    unsigned char rBuf[64];
++	
++    if ((nBytes = read( pInfo->fd, (char *)&kb, sizeof(kb))) > 0) {
++		for (i = 0; i < nBytes / sizeof(kb); i++)
++		  xf86MsgVerb(X_INFO, 5, "flag %08x, scan %08x, cap %08x, sym %08x\n",
++				 kb.data.flags, kb.data.key_scan, kb.data.key_cap, kb.data.key_sym);
++		  pKbd->PostEvent(pInfo, kb.data.key_scan & 0x7f,
++						  (kb.data.flags & KEY_DOWN) ? TRUE : FALSE);
++	}
++}
++
++static Bool
++OpenKeyboard(InputInfoPtr pInfo)
++{
++    KbdDevPtr pKbd = (KbdDevPtr) pInfo->private;
++    int i;
++    KbdProtocolId prot = PROT_UNKNOWN_KBD;
++    char *s, *n;
++
++    s = xf86SetStrOption(pInfo->options, "Protocol", NULL);
++    for (i = 0; protocols[i].name; i++) {
++        if (xf86NameCmp(s, protocols[i].name) == 0) {
++           prot = protocols[i].id;
++           break;
++        }
++    }
++
++    switch (prot) {
++    	case PROT_HID:
++           pInfo->read_input = hidReadInput;
++           break;
++        default:
++           xf86Msg(X_ERROR,"\"%s\" is not a valid keyboard protocol name\n", s);
++           free(s);
++           return FALSE;
++    }
++    xf86Msg(X_CONFIG, "%s: Protocol: %s\n", pInfo->name, s);
++    free(s);
++
++	n = PATH_HID_KEYBOARD;
++    s = xf86SetStrOption(pInfo->options, "Device", NULL);
++    if (s != NULL)
++	  n = s;
++
++	pInfo->fd = open(n, O_RDONLY | O_EXCL);
++	if (pInfo->fd == -1) {
++		xf86Msg(X_ERROR, "%s: cannot open \"%s\"\n", pInfo->name, n);
++		if (s)
++		  free(s);
++		return FALSE;
++	}
++	
++	pKbd->isConsole = FALSE;
++    return TRUE;
++}
++
++_X_EXPORT Bool
++xf86OSKbdPreInit(InputInfoPtr pInfo)
++{
++    KbdDevPtr pKbd = pInfo->private;
++
++    pKbd->KbdInit	= KbdInit;
++    pKbd->KbdOn		= KbdOn;
++    pKbd->KbdOff	= KbdOff;
++    pKbd->Bell		= SoundBell;
++    pKbd->SetLeds	= SetKbdLeds;
++    pKbd->GetLeds	= GetKbdLeds;
++    pKbd->KbdGetMapping	= KbdGetMapping;
++
++    pKbd->RemapScanCode = NULL;
++
++    pKbd->OpenKeyboard = OpenKeyboard;
++    pKbd->CustomKeycodes = FALSE;
++    
++    pKbd->private = calloc(sizeof(NtoKbdPrivRec), 1);
++    if (pKbd->private == NULL) {
++       xf86Msg(X_ERROR,"can't allocate keyboard OS private data\n");
++       return FALSE;
++    }
++    return TRUE;
++}

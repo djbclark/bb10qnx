@@ -1,0 +1,16 @@
+$NetBSD$
+
+--- src/Makefile.am.orig	2012-04-09 17:04:54.000000000 +0000
++++ src/Makefile.am
+@@ -41,6 +41,11 @@ OS_SUPPORT = netbsd_pci.c
+ VGA_ARBITER = common_vgaarb_stub.c
+ endif
+ 
++if NTO
++OS_SUPPORT = nto_pci.c
++VGA_ARBITER = common_vgaarb_stub.c
++endif
++
+ if OPENBSD
+ OS_SUPPORT = openbsd_pci.c
+ # VGA Arbiter code is included in openbsd_pci.c

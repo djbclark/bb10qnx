@@ -1,0 +1,28 @@
+$NetBSD: distinfo,v 1.9 2013/10/14 06:51:02 adam Exp $
+
+SHA1 (cvs-1.12.13.tar.bz2) = 93a8dacc6ff0e723a130835713235863f1f5ada9
+RMD160 (cvs-1.12.13.tar.bz2) = ba3048e3e2d99ae78f6a759889b615acf65dd487
+Size (cvs-1.12.13.tar.bz2) = 3911104 bytes
+SHA1 (patch-ab) = bc26fcb899d6316298c97779016aab4edb5cd124
+SHA1 (patch-ad) = 12847d39cece34b310e4bc88c47fa8769233dff5
+SHA1 (patch-ae) = be535ece7dc9b62c940f500e67c454bf1a86feed
+SHA1 (patch-af) = 4299a901206aef3accb428579deb8774411992c7
+SHA1 (patch-ag) = 53d072ba6bdbe0f988829616a232bb154cab2be3
+SHA1 (patch-ah) = b03e6675ab1f6f62fc885d990b5a6bf64c309e9f
+SHA1 (patch-ai) = d265a2967566cf2679ad6fff1dffd5c6d6cbd120
+SHA1 (patch-ak) = 3582de771a424cd7c906574bf4a76fc57f977e6b
+SHA1 (patch-al) = 5c4909942ccfa7d7000c2856705ca9a28dbf005d
+SHA1 (patch-am) = cb0cc7cdfaf1d2455c519eda5cf239ea623c4f7b
+SHA1 (patch-an) = 2eac4f7d0be8aa73de2ef3b021c134d0d9e40125
+SHA1 (patch-ao) = ccc7a159a6eb1ebc07c9187e3bcd0db61b8b4086
+SHA1 (patch-ap) = 8c8aafece339da841d3d3629449f1197339f3b22
+SHA1 (patch-aq) = b7cabaf9b713aac2a199a98a91432f1abf406c82
+SHA1 (patch-ar) = 3cb7fce566606a3757f51d5ca562a8117ebfec92
+SHA1 (patch-at) = 618673945aa10053f9fed5bee71b51605f39f4b4
+SHA1 (patch-au) = 2f906a2940c496c4ecfcbb6efaf79fe43726a12c
+SHA1 (patch-av) = 5cff0af09fd16509758aed06b5d9ce1b3985b1a9
+SHA1 (patch-ay) = 6ce1c3c21dbc478248068f8b8850c21b0cb48c42
+SHA1 (patch-az) = 9dfd460ae6617f1492e0e6861387ff80080a7d5d
+SHA1 (patch-ba) = 7153e12e5da86effd4285e147f9f534011982e07
+SHA1 (patch-src_ignore.c) = 90ac25311c83bb5713b83b9cfb6b2c03790ee787
+SHA1 (patch-src_zlib.c) = fee3becf1cc2e45d1241a302ed65c5f11b477a0a

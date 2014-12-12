@@ -1,0 +1,19 @@
+$NetBSD$
+
+--- src/option.c.orig	2009-09-21 14:11:11.000000000 +0000
++++ src/option.c
+@@ -1151,7 +1151,13 @@ zenity_calendar_post_callback (GOptionCo
+     if (zenity_calendar_date_format)
+       results->calendar_data->date_format = zenity_calendar_date_format;
+     else
+-      results->calendar_data->date_format = g_locale_to_utf8 (nl_langinfo (D_FMT), -1, NULL, NULL, NULL);
++      results->calendar_data->date_format = g_locale_to_utf8 (
++#ifndef __QNXNTO__
++	  nl_langinfo (D_FMT),
++#else
++	  "%m/%d/%y",
++#endif
++	  -1, NULL, NULL, NULL);
+ 
+   } else {
+     if (zenity_calendar_day > -1)

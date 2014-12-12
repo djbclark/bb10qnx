@@ -1,0 +1,69 @@
+$NetBSD: patch-ab,v 1.4 2006/05/12 09:30:55 joerg Exp $
+
+Added more logging.
+
+--- pptp.c.orig	2006-02-13 03:07:42.000000000 +0000
++++ pptp.c
+@@ -7,12 +7,14 @@
+ 
+ #include <sys/types.h>
+ #include <sys/socket.h>
+-#if defined(__FreeBSD__)
++#if defined(__FreeBSD__) || defined(__DragonFly__)
+ #include <libutil.h>
+ #elif defined(__NetBSD__) || defined(__OpenBSD__)
+ #include <util.h>
+ #elif defined(__APPLE__)
+ #include <util.h>
++#elif defined(__QNXNTO__)
++#include <unix.h>
+ #else
+ #include <pty.h>
+ #endif
+@@ -39,6 +41,24 @@
+ #include <getopt.h>
+ #endif
+ #include <limits.h>
++#ifdef __QNXNTO__
++#ifndef _U_INT8_T_DEFINED
++#define _U_INT8_T_DEFINED
++typedef _Uint8t         u_int8_t;
++#endif
++#ifndef _U_INT16_T_DEFINED
++#define _U_INT16_T_DEFINED
++typedef _Uint16t        u_int16_t;
++#endif
++#ifndef _U_INT32_T_DEFINED
++#define _U_INT32_T_DEFINED
++typedef _Uint32t        u_int32_t;
++#endif
++#ifndef _U_INT64_T_DEFINED
++#define _U_INT64_T_DEFINED
++typedef _Uint64t        u_int64_t;
++#endif
++#endif
+ #include "config.h"
+ #include "pptp_callmgr.h"
+ #include "pptp_gre.h"
+@@ -270,6 +290,8 @@ int main(int argc, char **argv, char **e
+     inetaddr = get_ip_address(argv[optind]);
+     optind++;
+ 
++    log("using remote IP address %s\n", inet_ntoa(inetaddr));
++
+     /* Find the ppp options, extract phone number */
+     pppdargc = argc - optind;
+     pppdargv = argv + optind;
+@@ -517,6 +539,12 @@ void launch_pppd(char *ttydev, int argc,
+     for (j = 0; j < argc; j++)
+         new_argv[i++] = argv[j];
+     new_argv[i] = NULL;
++
++    fprintf(stderr, "running pppd:");
++    for (i = 0; new_argv[i] != NULL; i++)
++        fprintf(stderr, " %s", new_argv[i]);
++    fprintf(stderr, "\n");
++
+     execvp(new_argv[0], new_argv);
+ }
+ 

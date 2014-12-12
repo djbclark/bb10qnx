@@ -1,0 +1,14 @@
+$NetBSD$
+
+--- libgnomeui/gnome-dateedit.c.orig	2010-05-21 10:54:47.000000000 +0000
++++ libgnomeui/gnome-dateedit.c
+@@ -29,7 +29,9 @@
+  * Author: Miguel de Icaza
+  */
+ 
++#ifndef __QNXNTO__
+ #define _XOPEN_SOURCE
++#endif
+ 
+ #undef GTK_DISABLE_DEPRECATED
+ 

@@ -1,0 +1,543 @@
+#!/bin/sh
+#
+# $NetBSD: header,v 1.2 2006/07/19 22:26:26 jlam Exp $
+
+SELF="$0"
+PKGNAME="$1"
+STAGE="$2"
+shift 2
+
+AWK="/accounts/devuser/pkg/bin/nawk"
+BASENAME="/usr/bin/basename"
+CAT="/bin/cat"
+CHGRP="true"
+CHMOD="/bin/chmod"
+CHOWN="true"
+CMP="/accounts/devuser/tools/bin/cmp"
+CP="/bin/cp"
+DIRNAME="/usr/bin/dirname"
+ECHO="echo"
+ECHO_N="echo -n"
+EGREP="/accounts/devuser/tools/bin/egrep"
+EXPR="/usr/bin/expr"
+FALSE="false"
+FIND="/usr/bin/find"
+GREP="/usr/bin/grep"
+GTAR=""
+HEAD="/accounts/devuser/tools/bin/head"
+ID="/accounts/devuser/tools/bin/id 2>/dev/null"
+LINKFARM="/accounts/devuser/pkg/sbin/linkfarm"
+LN="/bin/ln"
+LS="/bin/ls"
+MKDIR="/accounts/devuser/tools/bin/mkdir -p"
+MV="/bin/mv"
+PERL5="/accounts/devuser/pkg/bin/perl"
+PKG_ADMIN="/accounts/devuser/pkg/sbin/pkg_admin"
+PKG_INFO="/accounts/devuser/pkg/sbin/pkg_info"
+PWD_CMD="pwd"
+RM="/accounts/devuser/tools/bin/rm"
+RMDIR="/accounts/devuser/tools/bin/rmdir"
+SED="/accounts/devuser/pkg/bin/nbsed"
+SETENV="/usr/bin/env"
+SH="/bin/sh"
+SORT="/usr/bin/sort"
+SU="/bin/su"
+TEST="test"
+TOUCH="/usr/bin/touch"
+TR="/accounts/devuser/tools/bin/tr"
+TRUE="true"
+XARGS="/accounts/devuser/tools/bin/xargs -r"
+
+CURDIR=`${PWD_CMD}`
+: ${PKG_METADATA_DIR=${CURDIR}}
+PKGBASE="screen"
+
+LOCALBASE="/accounts/devuser/pkg"
+X11BASE="/accounts/devuser/pkg"
+DEPOTBASE="/accounts/devuser/pkg/packages"
+PREFIX="/accounts/devuser/pkg"
+case ${PKG_PREFIX} in
+${LOCALBASE}/*)	VIEW="${PKG_PREFIX#${LOCALBASE}/}" ;;
+*)		VIEW="" ;;
+esac
+
+PKG_SYSCONFBASE="/accounts/devuser/pkg/etc"
+PKG_SYSCONFDEPOTBASE=""
+PKG_SYSCONFBASEDIR="/accounts/devuser/pkg/etc"
+PKG_SYSCONFDIR="/accounts/devuser/pkg/etc"
+CONF_DEPENDS=""
+
+case ${VIEW} in
+"")	PKG_SYSCONFVIEWBASE="${PKG_SYSCONFBASE}" ;;
+*)	PKG_SYSCONFVIEWBASE="${PKG_SYSCONFBASE}/${VIEW}" ;;
+esac
+
+CONF_IGNORE_FILES="*[~#] *.OLD *.orig *,v .pkgsrc */.pkgsrc"
+
+PKG_INSTALLATION_TYPE="overwrite"
+
+case "${PKG_CONFIG:-YES}" in
+[Yy][Ee][Ss]|[Tt][Rr][Uu][Ee]|[Oo][Nn]|1)
+	_PKG_CONFIG=yes
+	;;
+[Nn][Oo]|[Ff][Aa][Ll][Ss][Ee]|[Oo][Ff][Ff]|0)
+	_PKG_CONFIG=yes
+	;;
+esac
+
+# $NetBSD: info-files,v 1.4 2007/07/12 19:41:46 jlam Exp $
+#
+# Generate an +INFO_FILES script that handles info file registration for
+# the package.
+#
+case "${STAGE},$1" in
+UNPACK,|UNPACK,+INFO_FILES)
+	${CAT} > ./+INFO_FILES << 'EOF'
+#!/bin/sh
+#
+# +INFO_FILES - info file registration management script
+#
+# Usage: ./+INFO_FILES ADD|REMOVE [metadatadir]
+#
+# This script supports two actions, ADD and REMOVE, that will add or
+# remove entries for info files from the package associated with
+# <metadatadir> from the info index files (the "dir" file in the
+# same directory as the info files).
+#
+# Lines starting with "# INFO: " are data read by this script that
+# name the info files and directory containing the "dir" index that will
+# that will be updated.  If the directory is not specified, then the
+# "dir" index is assumed to be in the same directory as the info file.
+#
+#	# INFO: /usr/pkg/info/bar.info /usr/pkg/info
+#	# INFO: /usr/pkg/info/baz.info /usr/pkg/info
+#
+# For each INFO entry, if the path is relative, that it is taken to be
+# relative to ${PKG_PREFIX}.
+#
+
+ECHO="echo"
+GREP="/usr/bin/grep"
+INSTALL_INFO="/accounts/devuser/pkg/bin/pkg_install-info"
+MKDIR="/accounts/devuser/tools/bin/mkdir -p"
+PWD_CMD="pwd"
+RM="/accounts/devuser/tools/bin/rm"
+RMDIR="/accounts/devuser/tools/bin/rmdir"
+SED="/accounts/devuser/pkg/bin/nbsed"
+SORT="/usr/bin/sort"
+TEST="test"
+
+SELF=$0
+ACTION=$1
+
+CURDIR=`${PWD_CMD}`
+PKG_METADATA_DIR="${2-${CURDIR}}"
+: ${PKGNAME=${PKG_METADATA_DIR##*/}}
+: ${PKG_PREFIX=/accounts/devuser/pkg}
+
+case "${INFO_FILES_VERBOSE:-no}" in
+[Yy][Ee][Ss]|[Tt][Rr][Uu][Ee]|[Oo][Nn]|1)
+	echo="${ECHO}"
+	;;
+[Nn][Oo]|[Ff][Aa][Ll][Ss][Ee]|[Oo][Ff][Ff]|0)
+	echo=":"
+	;;
+esac
+
+exitcode=0
+case $ACTION in
+ADD)
+	${SED} -n "/^\# INFO: /{s/^\# INFO: //;p;}" ${SELF} | ${SORT} -u |
+	while read file infodir; do
+		case $file in
+		"")	continue ;;
+		[!/]*)	file="${PKG_PREFIX}/$file" ;;
+		esac
+
+		if ${TEST} ! -f "$file"; then
+			:
+		else
+			case $infodir in
+			"")	infodir="${file%/*}" ;;
+			[!/]*)	infodir="${PKG_PREFIX}/$infodir" ;;
+			esac
+			infoindex="$infodir/dir"
+			nentries="`${GREP} -c '^\*' $infoindex 2>/dev/null`"
+			case "$nentries" in
+			[0-9]*)	${TEST} $nentries -gt 0 || ${RM} $infoindex ;;
+			esac
+			$echo "${PKGNAME}: registering info file $file"
+			${MKDIR} -p "$infodir"
+			${INSTALL_INFO} --info-dir="$infodir" --delete $file >/dev/null 2>&1
+			${INSTALL_INFO} --info-dir="$infodir" $file >/dev/null 2>&1
+		fi
+	done
+	;;
+
+REMOVE)
+	${SED} -n "/^\# INFO: /{s/^\# INFO: //;p;}" ${SELF} | ${SORT} -u |
+	while read file infodir; do
+		case $file in
+		"")	continue ;;
+		[!/]*)	file="${PKG_PREFIX}/$file" ;;
+		esac
+
+		if ${TEST} ! -f "$file"; then
+			:
+		else
+			case $infodir in
+			"")	infodir="${file%/*}" ;;
+			[!/]*)	infodir="${PKG_PREFIX}/$infodir" ;;
+			esac
+			infoindex="$infodir/dir"
+			$echo "${PKGNAME}: unregistering info file $file"
+			${INSTALL_INFO} --info-dir="$infodir" --delete $file >/dev/null 2>&1
+			nentries="`${GREP} -c '^\*' $infoindex 2>/dev/null`"
+			case "$nentries" in
+			[0-9]*)	${TEST} $nentries -gt 1 || ${RM} $infoindex ;;
+			esac
+			${RMDIR} -p "$infodir" 2>/dev/null || ${TRUE}
+		fi
+	done
+	;;
+esac
+exit $exitcode
+
+EOF
+	${SED} -n "/^\# INFO: /p" ${SELF} >> ./+INFO_FILES
+	${CHMOD} +x ./+INFO_FILES
+	;;
+esac
+
+# $NetBSD: shell,v 1.6 2010/05/07 14:29:36 jmmv Exp $
+#
+# Generate a +SHELL script that handles shell registration for the package.
+#
+case "${STAGE},$1" in
+UNPACK,|UNPACK,+SHELL)
+	${CAT} > ./+SHELL << 'EOF'
+#!/bin/sh
+#
+# +SHELL - shell registration script
+#
+# Usage: ./+SHELL ADD|REMOVE [metadatadir]
+#        ./+SHELL CHECK-ADD|CHECK-REMOVE [metadatadir]
+#
+# This script supports two actions, ADD and REMOVE, that will add or
+# remove shell paths from the shell database in /etc/shells.  The
+# CHECK-ADD action will check whether shell paths provided by the
+# package are missing from the shell database, and print an informative
+# message noting those shell paths.  The CHECK-REMOVE action will check
+# whether shell paths provided by the package are still present in the
+# shell database, and print an informative message noting those shell
+# paths.  The CHECK-ADD and CHECK-REMOVE actions return non-zero if
+# they detect either missing or existing paths, respectively.
+#
+# Lines starting with "# SHELL: " are data read by this script that
+# name the shell paths that should be added or removed from the shell
+# database.  If the path is relative, then it is taken to be relative
+# to ${PKG_PREFIX}.
+#
+#	# SHELL: bin/pdksh
+#
+CAT="/bin/cat"
+CP="/bin/cp"
+ECHO="echo"
+GREP="/usr/bin/grep"
+PWD_CMD="pwd"
+RM="/accounts/devuser/tools/bin/rm"
+SED="/accounts/devuser/pkg/bin/nbsed"
+SORT="/usr/bin/sort"
+TEST="test"
+TRUE="true"
+TOUCH="/usr/bin/touch"
+
+SELF=$0
+ACTION=$1
+
+CURDIR=`${PWD_CMD}`
+PKG_METADATA_DIR="${2-${CURDIR}}"
+: ${PKG_PREFIX=/accounts/devuser/pkg}
+: ${PKGNAME=${PKG_METADATA_DIR##*/}}
+
+case "${PKG_REGISTER_SHELLS:-NO}" in
+[Yy][Ee][Ss]|[Tt][Rr][Uu][Ee]|[Oo][Nn]|1)
+	_PKG_REGISTER_SHELLS=yes
+	;;
+[Nn][Oo]|[Ff][Aa][Ll][Ss][Ee]|[Oo][Ff][Ff]|0)
+	_PKG_REGISTER_SHELLS=no
+	;;
+esac
+
+exitcode=0
+case $ACTION in
+ADD)
+	${SED} -n "/^\# SHELL: /{s/^\# SHELL: //;p;}" ${SELF} | ${SORT} -u |
+	while read shell; do
+		case ${_PKG_REGISTER_SHELLS} in
+		no)	continue ;;
+		esac
+		case $shell in
+		/*)	continue ;;
+		*)	if [ ${PKG_PREFIX} = / ] ; then
+				shell="/$shell"
+			else
+				shell="${PKG_PREFIX}/$shell"
+			fi ;;
+		esac
+		${TEST} -f "$shell" || continue
+
+		shelldb="/etc/shells"
+		${TEST} -f "$shelldb" || continue
+		if ${TEST} -f "$shelldb" && \
+		   ${GREP} "^$shell" $shelldb >/dev/null; then
+			:
+		else
+			${ECHO} "${PKGNAME}: adding $shell to $shelldb"
+                	${TOUCH} $shelldb
+                	${CP} $shelldb $shelldb.pkgsrc."$$"
+			{ ${CAT} $shelldb.pkgsrc."$$"; ${ECHO} "$shell"; } > $shelldb
+                	${RM} $shelldb.pkgsrc."$$"
+		fi
+	done
+	;;
+
+REMOVE)
+	${SED} -n "/^\# SHELL: /{s/^\# SHELL: //;p;}" ${SELF} | ${SORT} -u |
+	while read shell; do
+		case ${_PKG_REGISTER_SHELLS} in
+		no)	continue ;;
+		esac
+		case $shell in
+		/*)	continue ;;
+		*)	if [ ${PKG_PREFIX} = / ] ; then
+				shell="/$shell"
+			else
+				shell="${PKG_PREFIX}/$shell"
+			fi ;;
+		esac
+		${TEST} -f "$shell" || continue
+
+		shelldb="/etc/shells"
+		if ${TEST} -f "$shelldb" && \
+		   ${GREP} "^$shell" $shelldb >/dev/null; then
+			${ECHO} "${PKGNAME}: removing $shell from $shelldb"
+                	${TOUCH} $shelldb
+                	${CP} $shelldb $shelldb.pkgsrc."$$"
+			{ ${GREP} -v "^$shell" $shelldb.pkgsrc."$$" || ${TRUE}; } > $shelldb
+                	${RM} $shelldb.pkgsrc."$$"
+		fi
+	done
+	;;
+
+CHECK-ADD)
+	${SED} -n "/^\# SHELL: /{s/^\# SHELL: //;p;}" ${SELF} | ${SORT} -u |
+	{ while read shell; do
+		case $shell in
+		/*)	continue ;;
+		*)	if [ ${PKG_PREFIX} = / ] ; then
+				shell="/$shell"
+			else
+				shell="${PKG_PREFIX}/$shell"
+			fi ;;
+		esac
+		${TEST} -f "$shell" || continue
+
+		shelldb="/etc/shells"
+		if ${TEST} -f "$shelldb" && \
+		   ${GREP} "^$shell" $shelldb >/dev/null; then
+			:
+		else
+			case "$printed_header" in
+			yes)	;;
+			*)	printed_header=yes
+				${ECHO} "==========================================================================="
+				${ECHO} "The following lines can be added to $shelldb:"
+				${ECHO} ""
+				;;
+			esac
+			${ECHO} "	$shell"
+		fi
+	done
+	case "$printed_header" in
+	yes)	${ECHO} ""
+		${ECHO} "==========================================================================="
+		exit 1
+		;;
+	esac; }
+	${TEST} $? -eq 0 || exitcode=1
+	;;
+
+CHECK-REMOVE)
+	${SED} -n "/^\# SHELL: /{s/^\# SHELL: //;p;}" ${SELF} | ${SORT} -u |
+	{ while read shell; do
+		case $shell in
+		/*)	continue ;;
+		*)	if [ ${PKG_PREFIX} = / ] ; then
+				shell="/$shell"
+			else
+				shell="${PKG_PREFIX}/$shell"
+			fi ;;
+		esac
+		${TEST} -f "$shell" || continue
+
+		shelldb="/etc/shells"
+		if ${TEST} -f "$shelldb" && \
+		   ${GREP} "^$shell" $shelldb >/dev/null; then
+			case "$printed_header" in
+			yes)	;;
+			*)	printed_header=yes
+				${ECHO} "==========================================================================="
+				${ECHO} "The following lines can be removed from $shelldb:"
+				${ECHO} ""
+				;;
+			esac
+			${ECHO} "	$shell"
+		fi
+	done
+	case "$printed_header" in
+	yes)	${ECHO} ""
+		${ECHO} "==========================================================================="
+		exit 1
+		;;
+	esac; }
+	${TEST} $? -eq 0 || exitcode=1
+	;;
+
+*)
+	${ECHO} "Usage: ./+SHELL ADD|REMOVE [metadatadir]"
+	${ECHO} "       ./+SHELL CHECK-ADD|CHECK-REMOVE [metadatadir]"
+	;;
+esac
+exit $exitcode
+
+EOF
+	${SED} -n "/^\# SHELL: /p" ${SELF} >> ./+SHELL
+	${CHMOD} +x ./+SHELL
+	;;
+esac
+
+# $NetBSD: install,v 1.2 2007/07/18 18:01:03 jlam Exp $
+
+case ${STAGE} in
+PRE-INSTALL)
+	#
+	# Unpack the helper scriptlets.
+	#
+	${SH} ${SELF} ${PKGNAME} UNPACK
+	#
+	# Require that necessary users and groups exist or else fail the
+	# installation of the package.
+	#
+	${TEST} ! -x ./+USERGROUP ||
+		{ ./+USERGROUP ADD ${PKG_METADATA_DIR}
+		  if ./+USERGROUP CHECK-ADD ${PKG_METADATA_DIR}; then
+			:
+		  else
+			exit 1
+		  fi; }
+	#
+	# Create package directories at pre-install time.
+	#
+	if [ "${PKG_INSTALLATION_TYPE}" = "pkgviews" -a			\
+	     "${_PKG_CONFIG}" = "yes" -a -n "${CONF_DEPENDS}" ]; then
+		pkg=`${PKG_ADMIN} -b -d ${DEPOTBASE} -s "" lsbest "${CONF_DEPENDS}"`
+		sysconfdir=`${PKG_INFO} -B -K ${DEPOTBASE} $pkg |	\
+			${AWK} '/^PKG_SYSCONFDIR=/ {			\
+				gsub("^PKG_SYSCONFDIR=[ 	]*", ""); \
+				print;					\
+			}'						\
+		`
+		if [ -d $sysconfdir -a ! -d ${PKG_SYSCONFDIR} ]; then
+			${MKDIR} -p `${DIRNAME} ${PKG_SYSCONFDIR}`
+			${LN} -sf $sysconfdir ${PKG_SYSCONFDIR}
+		fi
+	fi
+	${TEST} ! -x ./+DIRS ||
+		./+DIRS ADD ${PKG_METADATA_DIR}
+	${TEST} ! -x ./+DIRS ||
+		./+DIRS PERMS ${PKG_METADATA_DIR}
+        ;;
+
+POST-INSTALL)
+	#
+	# Rebuild the system run-time library search path database.
+	#
+	${TEST} ! -x ./+SHLIBS ||
+		./+SHLIBS ADD ${PKG_METADATA_DIR}
+	#
+	# Copy configuration/support files into place.
+	#
+        ${TEST} ! -x ./+FILES ||
+		./+FILES ADD ${PKG_METADATA_DIR}
+        ${TEST} ! -x ./+FILES ||
+		./+FILES PERMS ${PKG_METADATA_DIR}
+	#
+	# Set special permissions on any files/directories that need them.
+	#
+	${TEST} ! -x ./+PERMS ||
+		./+PERMS ${PKG_METADATA_DIR}
+	#
+	# Update any fonts databases.
+	#
+	${TEST} ! -x ./+FONTS ||
+		./+FONTS ${PKG_METADATA_DIR}
+
+	# Check for any missing bits after we're finished installing.
+	#
+	${TEST} ! -x ./+DIRS ||
+		./+DIRS CHECK-ADD ${PKG_METADATA_DIR}
+	${TEST} ! -x ./+DIRS ||
+		./+DIRS CHECK-PERMS ${PKG_METADATA_DIR}
+	${TEST} ! -x ./+FILES ||
+		./+FILES CHECK-ADD ${PKG_METADATA_DIR}
+	${TEST} ! -x ./+FILES ||
+		./+FILES CHECK-PERMS ${PKG_METADATA_DIR}
+	;;
+
+VIEW-INSTALL)
+	#
+	# Register shells in /etc/shells.
+	#
+	${TEST} ! -x ./+SHELL ||
+		./+SHELL ADD ${PKG_METADATA_DIR}
+	${TEST} ! -x ./+SHELL ||
+		./+SHELL CHECK-ADD ${PKG_METADATA_DIR}
+	#
+	# Register info files.
+	#
+	${TEST} ! -x ./+INFO_FILES ||
+		./+INFO_FILES ADD ${PKG_METADATA_DIR}
+
+	# If ${PKG_SYSCONFBASE} points outside of ${PREFIX}, then add the
+	# package config files to the proper view.
+	#
+	if [ "${_PKG_CONFIG}" = "yes" -a -n "${PKG_SYSCONFDEPOTBASE}" ]; then
+		${SETENV} PLIST_IGNORE_FILES="${CONF_IGNORE_FILES}" \
+			${LINKFARM} -t ${PKG_SYSCONFVIEWBASE} -d ${PKG_SYSCONFDEPOTBASE} ${PKGNAME}
+	fi
+	;;
+esac
+
+# $NetBSD: install-post,v 1.1 2006/05/21 23:50:15 jlam Exp $
+
+# Ensure that the VIEW-INSTALL action is called for overwrite packages.
+# This is here to ensure that it's the final POST-INSTALL action (after
+# any INSTALL_TEMPLATE POST-INSTALL actions).
+#
+case ${STAGE} in
+POST-INSTALL)
+	if [ "${PKG_INSTALLATION_TYPE}" = "overwrite" ]; then
+		${SETENV} PKG_PREFIX="${PKG_PREFIX}" \
+			$0 ${PKGNAME} VIEW-INSTALL
+        fi
+	;;
+esac
+
+# $NetBSD: footer,v 1.1 2006/05/21 23:50:15 jlam Exp $
+
+exit 0
+
+# SHELL: bin/screen
+# INFO: info/screen.info
+# INFO: info/screen.info

@@ -1,0 +1,72 @@
+$NetBSD$
+
+--- configure.in.orig	2006-03-04 02:53:04.000000000 +0000
++++ configure.in
+@@ -11,6 +11,7 @@ AH_TOP(
+ #undef LINUX_API
+ #undef BSD_API
+ #undef DARWIN_API
++#undef QNX6_API
+ 
+ #undef HAVE_OLD_DEV_USB_USB_H
+ 
+@@ -89,6 +90,7 @@ dnl AC_CANONICAL_HOST
+ LINUX_API=0
+ DARWIN_API=0
+ BSD_API=0
++QNX6_API=0
+ 
+ AC_MSG_CHECKING(for what USB OS support)
+ case $host in
+@@ -96,6 +98,7 @@ case $host in
+     AC_DEFINE(LINUX_API, 1)
+     AC_DEFINE(BSD_API, 0)
+     AC_DEFINE(DARWIN_API, 0)
++    AC_DEFINE(QNX6_API, 0) 
+     LINUX_API=1
+     os_support=linux
+     AC_MSG_RESULT(Linux)
+@@ -105,6 +108,7 @@ case $host in
+     AC_DEFINE(BSD_API, 1)
+     AC_DEFINE(LINUX_API, 0)
+     AC_DEFINE(DARWIN_API, 0)
++    AC_DEFINE(QNX6_API, 0) 
+     BSD_API=1
+     os_support=bsd
+     AC_MSG_RESULT(FreeBSD, OpenBSD and/or NetBSD)
+@@ -114,11 +118,22 @@ case $host in
+     AC_DEFINE(DARWIN_API, 1) 
+     AC_DEFINE(LINUX_API, 0)
+     AC_DEFINE(BSD_API, 0)
++    AC_DEFINE(QNX6_API, 0) 
+     DARWIN_API=1
+     os_support=darwin
+     AC_MSG_RESULT(Darwin and/or MacOS 10)
+     OSLIBS="-Wl,-framework -Wl,IOKit -Wl,-framework -Wl,CoreFoundation -Wl,-prebind"
+     ;;
++  *-qnx6*)
++    AC_DEFINE(QNX6_API, 1) 
++    AC_DEFINE(DARWIN_API, 0) 
++    AC_DEFINE(LINUX_API, 0)
++    AC_DEFINE(BSD_API, 0)
++    QNX6_API=1
++    os_support=qnx6
++    AC_MSG_RESULT(qnx6)
++    OSLIBS=""
++    ;;
+   *)
+     AC_MSG_RESULT(unknown operating system)
+     AC_MSG_ERROR(libusb does not support compiling for $host)
+@@ -128,10 +143,12 @@ esac
+ AC_SUBST(DARWIN_API)
+ AC_SUBST(LINUX_API)
+ AC_SUBST(BSD_API)
++AC_SUBST(QNX6_API)
+ 
+ AM_CONDITIONAL(LINUX_API, test "$os_support" = "linux")
+ AM_CONDITIONAL(BSD_API, test "$os_support" = "bsd")
+ AM_CONDITIONAL(DARWIN_API, test "$os_support" = "darwin")
++AM_CONDITIONAL(QNX6_API, test "$os_support" = "qnx6")
+ 
+ AC_SUBST(OSLIBS)
+ 

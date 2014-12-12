@@ -1,0 +1,93 @@
+$NetBSD: patch-aq,v 1.14 2013/07/07 18:13:56 adam Exp $
+
+--- configure.orig	2013-06-07 05:16:41.000000000 +0000
++++ configure
+@@ -2993,7 +2993,7 @@ if [ -z "$PLATFORM" ]; then
+         PLATFORM=unixware-g++
+         ;;
+      QNX:*)
+-        PLATFORM=unsupported/qnx-g++
++        PLATFORM=unsupported/qnx-X11-g++
+         ;;
+      *)
+         if [ "$OPT_HELP" != "yes" ]; then
+@@ -3223,13 +3223,13 @@ if [ -z "${CFG_HOST_ARCH}" ]; then
+             CFG_HOST_ARCH=x86_64
+         fi
+         ;;
+-    *:*:ppc)
++    *:*:ppc|*:*:powerpc)
+         if [ "$OPT_VERBOSE" = "yes" ]; then
+             echo "    32-bit PowerPC (powerpc)"
+         fi
+         CFG_HOST_ARCH=powerpc
+         ;;
+-    *:*:ppc64)
++    *:*:ppc64|*:*:powerpc64)
+         if [ "$OPT_VERBOSE" = "yes" ]; then
+             echo "    64-bit PowerPC (powerpc)"
+         fi
+@@ -3253,6 +3253,19 @@ if [ -z "${CFG_HOST_ARCH}" ]; then
+         fi
+         CFG_HOST_ARCH=sparc
+         ;;
++    NetBSD:*:sparc)
++        if [ "$OPT_VERBOSE" = "yes" ]; then
++            echo "    NetBSD on SPARC"
++        fi
++        CFG_HOST_ARCH=sparc
++        ;;
++    NetBSD:*:sparc64)
++        if [ "$OPT_VERBOSE" = "yes" ]; then
++            echo "    NetBSD on SPARC64"
++        fi
++        CFG_HOST_ARCH=sparc
++        CFG_HOST_BITSIZE=64
++        ;;
+     QNX:*:*)
+         case "$UNAME_MACHINE" in
+         x86pc)
+@@ -3561,7 +3574,7 @@ fi
+ if [ "$PLATFORM_MAC" = "yes" ] && [ '!' -z "$CFG_SDK" ]; then
+     # get the darwin version. 10.0.0 and up means snow leopard.
+     VERSION=`uname -r | tr '.' ' ' | awk '{print $1}'`
+-    if [ "$VERSION" -gt 9 ] && [ `basename "$CFG_SDK"` == "MacOSX10.4u.sdk" ] && [ "$PLATFORM" == "macx-g++" ]; then
++    if [ "$VERSION" -gt 9 ] && [ `basename "$CFG_SDK"` = "MacOSX10.4u.sdk" ] && [ "$PLATFORM" = "macx-g++" ]; then
+         echo
+         echo "WARNING: The 10.4u SDK does not support gcc 4.2. Configure with -platform macx-g++40. "
+         echo
+@@ -5058,7 +5071,7 @@ if true; then ###[ '!' -f "$outpath/bin/
+     done
+ 
+     QMAKE_BUILD_ERROR=no
+-    (cd "$outpath/qmake"; "$MAKE") || QMAKE_BUILD_ERROR=yes
++    (cd "$outpath/qmake"; "$MAKE" $MAKE_FLAGS) || QMAKE_BUILD_ERROR=yes
+     [ '!' -z "$QCONFIG_H" ] && mv -f "$QCONFIG_H" "$QMAKE_QCONFIG_H" #move qmake's qconfig.h to qconfig.h.qmake
+     [ '!' -z "$OLD_QCONFIG_H" ] && mv -f "${OLD_QCONFIG_H}.old" "$OLD_QCONFIG_H" #put back qconfig.h
+     [ "$QMAKE_BUILD_ERROR" = "yes" ] && exit 2
+@@ -7158,7 +7171,7 @@ fi
+ # select Carbon on 10.4 Tiger.
+ if [ "$PLATFORM_MAC" = "yes" ]; then
+     VERSION=`uname -r | tr '.' ' ' | awk '{print $1}'`
+-    if [ "$VERSION" == 8 ]; then
++    if [ "$VERSION" = 8 ]; then
+         CFG_MAC_COCOA="no";
+         CFG_MAC_CARBON="yes";
+     fi
+@@ -8422,7 +8435,7 @@ QMakeVar set sql-plugins "$SQL_PLUGINS"
+ [ "$CFG_EXCEPTIONS" = "no" ] && QCONFIG_FLAGS="$QCONFIG_FLAGS QT_NO_EXCEPTIONS"
+ [ "$CFG_IPV6" = "no" ]       && QCONFIG_FLAGS="$QCONFIG_FLAGS QT_NO_IPV6"
+ [ "$CFG_SXE" = "no" ]        && QCONFIG_FLAGS="$QCONFIG_FLAGS QT_NO_SXE"
+-[ "$CFG_DBUS" = "no" ]      && QCONFIG_FLAGS="$QCONFIG_FLAGS QT_NO_DBUS"
++#[ "$CFG_DBUS" = "no" ]      && QCONFIG_FLAGS="$QCONFIG_FLAGS QT_NO_DBUS"
+ 
+ if [ "$PLATFORM_QWS" != "yes" -a "$PLATFORM_QPA" != "yes" ]; then
+     [ "$CFG_GRAPHICS_SYSTEM" = "raster" ] && QCONFIG_FLAGS="$QCONFIG_FLAGS QT_GRAPHICSSYSTEM_RASTER"
+@@ -8638,6 +8651,7 @@ cat >>"$QTCONFIG.tmp" <<EOF
+ #configuration
+ CONFIG += $QTCONFIG_CONFIG
+ QT_ARCH = $CFG_ARCH
++QT_HOST_BITSIZE = $CFG_HOST_BITSIZE
+ QT_EDITION = $Edition
+ QT_CONFIG += $QT_CONFIG
+ 

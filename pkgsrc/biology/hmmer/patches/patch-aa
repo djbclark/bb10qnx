@@ -1,0 +1,28 @@
+$NetBSD: patch-aa,v 1.5 2013/07/21 15:58:51 wen Exp $
+replace "mkdir -p" with ${MKDIR} 
+--- Makefile.in.orig	2013-07-21 23:25:33.000000000 +0000
++++ Makefile.in
+@@ -51,7 +51,7 @@ CPPFLAGS  = @CPPFLAGS@
+ 
+ # Other tools
+ #
+-INSTMAN   = cp
++INSTMAN   = ${BSD_INSTALL_MAN}
+ AR        = @AR@ rcv
+ LN        = ln
+ RANLIB    = @RANLIB@
+@@ -176,11 +176,11 @@ testsuite: libraries
+ #          may be set on a make command line when building contrib RPMs).
+ install: libraries programs
+ 	cd ${PMARKDIR}; ${MAKE} profmark_progs
+-	-mkdir -p ${DESTDIR}${bindir}
++	-${MKDIR} ${DESTDIR}${bindir}
+ 	for file in $(PROGS); do\
+-	   cp ${SRCDIR}/$$file ${DESTDIR}${bindir}/;\
++	   ${BSD_INSTALL_PROGRAM} ${SRCDIR}/$$file ${DESTDIR}${bindir}/;\
+ 	done
+-#	-mkdir -p ${DESTDIR}/${MANDIR}/man${MANSUFFIX}
++#	-${MKDIR} ${DESTDIR}/${MANDIR}/man${MANSUFFIX}
+ #	-for file in hmmer $(PROGS); do\
+ #	   $(INSTMAN) documentation/man/$$file.man ${DESTDIR}$(MANDIR)/man$(MANSUFFIX)/$$file.$(MANSUFFIX);\
+ #	done

@@ -1,0 +1,47 @@
+$NetBSD: patch-ah,v 1.20 2011/12/02 14:14:58 hans Exp $
+
+Some builds of gcc seem to support this for compiling but then fail during
+linking with undefined reference to `__stack_chk_fail_local'
+
+--- config-scripts/cups-compiler.m4.orig	2011-09-09 17:28:58.000000000 +0000
++++ config-scripts/cups-compiler.m4
+@@ -125,8 +125,9 @@ if test -n "$GCC"; then
+ 	AC_MSG_CHECKING(if GCC supports -fstack-protector)
+ 	OLDCFLAGS="$CFLAGS"
+ 	CFLAGS="$CFLAGS -fstack-protector"
+-	AC_TRY_LINK(,,
++	AC_TRY_LINK(, [return 0;],
+ 		OPTIM="$OPTIM -fstack-protector"
++		LIBS="$LIBS $LIBS_SSP"
+ 		AC_MSG_RESULT(yes),
+ 		AC_MSG_RESULT(no))
+ 	CFLAGS="$OLDCFLAGS"
+@@ -136,17 +137,17 @@ if test -n "$GCC"; then
+ 	# that depend on a fixed address for common functions.
+ 	AC_MSG_CHECKING(if GCC supports -fPIE)
+ 	OLDCFLAGS="$CFLAGS"
+-	CFLAGS="$CFLAGS -fPIE"
+-	AC_TRY_COMPILE(,,
+-		[case "$CC" in
+-			*clang)
+-				PIEFLAGS="-fPIE -Wl,-pie"
+-				;;
+-			*)
+-				PIEFLAGS="-fPIE -pie"
+-				;;
+-		esac
+-		AC_MSG_RESULT(yes)],
++	case "$CC" in
++		*clang)
++			CFLAGS="$CFLAGS -fPIE -Wl,-pie"
++			;;
++		*)
++			CFLAGS="-fPIE -pie"
++			;;
++	esac
++	AC_TRY_LINK(, [return 0;],
++		PIEFLAGS="$CFLAGS"
++		AC_MSG_RESULT(yes),
+ 		AC_MSG_RESULT(no))
+ 	CFLAGS="$OLDCFLAGS"
+ 

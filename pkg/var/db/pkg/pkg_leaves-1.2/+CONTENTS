@@ -1,0 +1,18 @@
+@cwd /accounts/devuser/pkg
+@name pkg_leaves-1.2
+@comment $NetBSD: PLIST,v 1.1.1.1 2008/05/15 17:44:42 joerg Exp $
+bin/pkg_leaves
+@comment MD5:2ee43eb4de4edd0ee5fec61074ba2c7b
+@cwd /accounts/devuser/pkg
+@ignore
++COMMENT
+@ignore
++DESC
+@ignore
++BUILD_VERSION
+@ignore
++BUILD_INFO
+@ignore
++SIZE_PKG
+@ignore
++SIZE_ALL

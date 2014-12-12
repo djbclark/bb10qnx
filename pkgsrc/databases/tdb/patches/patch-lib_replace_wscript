@@ -1,0 +1,44 @@
+$NetBSD$
+
+--- lib/replace/wscript.orig	2013-06-04 14:21:30.000000000 +0000
++++ lib/replace/wscript
+@@ -257,7 +257,7 @@ struct foo bar = { .y = 'X', .x = 1 };
+     if not conf.CHECK_FUNCS('strlcpy strlcat'):
+         conf.CHECK_FUNCS_IN('strlcpy strlcat', 'bsd', headers='bsd/string.h',
+                 checklibc=True)
+-    if not conf.CHECK_FUNCS('getpeereid'):
++    if not conf.CHECK_FUNCS_IN('getpeereid', 'socket', checklibc=True):
+         conf.CHECK_FUNCS_IN('getpeereid', 'bsd', headers='sys/types.h bsd/unistd.h')
+     if not conf.CHECK_FUNCS_IN('setproctitle', 'bsd', headers='sys/types.h bsd/unistd.h'):
+         conf.CHECK_FUNCS_IN('setproctitle', 'setproctitle', headers='setproctitle.h')
+@@ -286,10 +286,10 @@ struct foo bar = { .y = 'X', .x = 1 };
+                         execute = True,
+                         define = 'HAVE_BSD_STRTOLL',
+                         )
+-    conf.CHECK_FUNCS('if_nametoindex strerror_r')
++    conf.CHECK_FUNCS_IN('if_nametoindex strerror_r', 'socket', checklibc=True)
+     conf.CHECK_FUNCS('getdirentries getdents syslog')
+-    conf.CHECK_FUNCS('gai_strerror get_current_dir_name')
+-    conf.CHECK_FUNCS('timegm getifaddrs freeifaddrs mmap setgroups syscall setsid')
++    conf.CHECK_FUNCS_IN('gai_strerror get_current_dir_name', 'socket', checklibc=True)
++    conf.CHECK_FUNCS_IN('timegm getifaddrs freeifaddrs mmap setgroups setsid', 'socket', checklibc=True)
+     conf.CHECK_FUNCS('getgrent_r getgrgid_r getgrnam_r getgrouplist getpagesize')
+     conf.CHECK_FUNCS('getpwent_r getpwnam_r getpwuid_r epoll_create')
+ 
+@@ -359,7 +359,7 @@ removeea setea
+     # these headers need to be tested as a group on freebsd
+     conf.CHECK_HEADERS(headers='sys/socket.h net/if.h', together=True)
+     conf.CHECK_HEADERS(headers='netinet/in.h arpa/nameser.h resolv.h', together=True)
+-    conf.CHECK_FUNCS_IN('res_search', 'resolv', checklibc=True,
++    conf.CHECK_FUNCS_IN('res_search', 'socket resolv', checklibc=True,
+                         headers='netinet/in.h arpa/nameser.h resolv.h')
+ 
+ 
+@@ -558,6 +558,7 @@ def build(bld):
+ 
+     REPLACE_HOSTCC_SOURCE = ''
+ 
++    if not bld.CONFIG_SET('HAVE_C99_VSNPRINTF'):       REPLACE_HOSTCC_SOURCE += ' snprintf.c'
+     for filename, functions in REPLACEMENT_FUNCTIONS.iteritems():
+         for function in functions:
+             if not bld.CONFIG_SET('HAVE_%s' % function.upper()):

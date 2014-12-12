@@ -1,0 +1,16 @@
+$NetBSD$
+
+--- include/icc34.h.in.orig	2007-05-25 14:04:02.000000000 +0000
++++ include/icc34.h.in
+@@ -210,9 +210,9 @@ typedef __int32_t       icInt64Number[2]
+ 
+ #include <sys/types.h>
+ 
+-#if defined(__sun) || defined(__hpux) || defined (__MINGW) || defined(__MINGW32__)
++#if defined(__sun) || defined(__hpux) || defined (__MINGW) || defined(__MINGW32__) || defined(__QNXNTO__)
+ 
+-#if defined (__MINGW) || defined(__MINGW32__)
++#if defined (__MINGW) || defined(__MINGW32__) || defined(__QNXNTO__)
+ #include <stdint.h>
+ #endif
+ 

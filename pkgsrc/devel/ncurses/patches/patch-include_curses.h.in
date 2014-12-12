@@ -1,0 +1,18 @@
+$NetBSD$
+
+--- include/curses.h.in.orig	2011-01-22 19:47:20.000000000 +0000
++++ include/curses.h.in
+@@ -203,6 +203,13 @@ typedef @cf_cv_type_of_bool@ NCURSES_BOO
+ #endif /* !__cplusplus, etc. */
+ 
+ #ifdef __cplusplus
++
++#ifdef __QNXNTO__ /* outside of extern "C" {} below */
++#if @NEED_WCHAR_H@
++#include <wchar.h>		/* ...to get mbstate_t, etc. */
++#endif
++#endif
++
+ extern "C" {
+ #define NCURSES_CAST(type,value) static_cast<type>(value)
+ #else

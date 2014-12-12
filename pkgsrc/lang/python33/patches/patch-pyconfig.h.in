@@ -1,0 +1,24 @@
+$NetBSD: patch-pyconfig.h.in,v 1.1 2012/12/10 03:15:49 tsarna Exp $
+
+--- pyconfig.h.in.orig	2012-09-29 08:00:50.000000000 +0000
++++ pyconfig.h.in
+@@ -1357,6 +1357,9 @@
+ /* Define on NetBSD to activate all library features */
+ #undef _NETBSD_SOURCE
+ 
++/* Define on QNX to activate all library features */
++#undef _QNX_SOURCE
++
+ /* Define to 2 if the system does not provide POSIX.1 features except with
+    this defined. */
+ #undef _POSIX_1_SOURCE
+@@ -1384,7 +1387,9 @@
+ #undef _UINT64_T
+ 
+ /* Define to the level of X/Open that your system supports */
++#if !defined(__sun) || (defined(__sun) && !defined(_XOPEN_SOURCE))
+ #undef _XOPEN_SOURCE
++#endif
+ 
+ /* Define to activate Unix95-and-earlier features */
+ #undef _XOPEN_SOURCE_EXTENDED

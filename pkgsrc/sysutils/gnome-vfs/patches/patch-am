@@ -1,0 +1,40 @@
+$NetBSD: patch-am,v 1.3 2007/09/19 22:22:39 wiz Exp $
+
+--- libgnomevfs/gnome-vfs-unix-mounts.c.orig	2010-02-09 12:16:14.000000000 +0000
++++ libgnomevfs/gnome-vfs-unix-mounts.c
+@@ -75,7 +75,11 @@
+ 
+ #if defined(HAVE_GETMNTINFO) && defined(HAVE_FSTAB_H) && defined(HAVE_SYS_MOUNT_H)
+ #include <sys/param.h>
++#ifndef __QNXNTO__
+ #include <sys/ucred.h>
++#else
++#include <nbutil.h>
++#endif
+ #include <sys/mount.h>
+ #include <fstab.h>
+ #ifdef HAVE_SYS_SYSCTL_H
+@@ -475,7 +479,11 @@ get_mtab_monitor_file (void)
+ gboolean
+ _gnome_vfs_get_current_unix_mounts (GList **return_list)
+ {
++#if defined(HAVE_STATVFS) && !defined(__APPLE__) && !defined(__FreeBSD__) && !defined(__DragonFly__) && !defined(__QNXNTO__)
++    	struct statvfs *mntent = NULL;
++#else
+     	struct statfs *mntent = NULL;
++#endif
+ 	int num_mounts, i;
+ 	GnomeVFSUnixMount *mount_entry;
+ 
+@@ -492,7 +500,11 @@ _gnome_vfs_get_current_unix_mounts (GLis
+ 		mount_entry->mount_path = g_strdup (mntent[i].f_mntonname);
+ 		mount_entry->device_path = g_strdup (mntent[i].f_mntfromname);
+ 		mount_entry->filesystem_type = g_strdup (mntent[i].f_fstypename);
++#if defined(HAVE_STATVFS) && !defined(__APPLE__) && !defined(__FreeBSD__) && !defined(__DragonFly__)
++		if (mntent[i].f_flag & MNT_RDONLY) {
++#else
+ 		if (mntent[i].f_flags & MNT_RDONLY) {
++#endif
+ 		    	mount_entry->is_read_only = TRUE;
+ 		}
+ 

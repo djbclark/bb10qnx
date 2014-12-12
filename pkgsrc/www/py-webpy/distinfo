@@ -1,0 +1,5 @@
+$NetBSD: distinfo,v 1.4 2013/07/05 23:35:35 rodent Exp $
+
+SHA1 (web.py-0.37.tar.gz) = 8744f710ddfb89ca2b66a509042b860d7216ff37
+RMD160 (web.py-0.37.tar.gz) = 8297ec3d2b87e209286562f523027cc94adf0f64
+Size (web.py-0.37.tar.gz) = 90232 bytes

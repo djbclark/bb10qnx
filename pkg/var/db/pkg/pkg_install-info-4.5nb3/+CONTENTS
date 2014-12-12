@@ -1,0 +1,18 @@
+@cwd /accounts/devuser/pkg
+@name pkg_install-info-4.5nb3
+@comment $NetBSD: PLIST,v 1.1.1.1 2003/06/09 22:16:10 seb Exp $
+bin/pkg_install-info
+@comment MD5:e3c8df7655811987c2ed7d7e94591326
+@cwd /accounts/devuser/pkg
+@ignore
++COMMENT
+@ignore
++DESC
+@ignore
++BUILD_VERSION
+@ignore
++BUILD_INFO
+@ignore
++SIZE_PKG
+@ignore
++SIZE_ALL

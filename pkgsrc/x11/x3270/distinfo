@@ -1,0 +1,6 @@
+$NetBSD: distinfo,v 1.11 2013/07/02 20:20:30 gls Exp $
+
+SHA1 (suite3270-3.3.12ga13-src.tgz) = 4c031a7da1d13550ec85726846e31c34d819f971
+RMD160 (suite3270-3.3.12ga13-src.tgz) = 71b6660acd7058b06a078c940c5a64ebf5b8deb7
+Size (suite3270-3.3.12ga13-src.tgz) = 6708810 bytes
+SHA1 (patch-aa) = 826eb5ab930d4d4b1dc340c15a4160c303291f16

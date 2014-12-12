@@ -1,0 +1,14 @@
+$NetBSD$
+
+--- src/kit/kit-spawn.c.orig	2008-05-30 21:24:44.000000000 +0000
++++ src/kit/kit-spawn.c
+@@ -41,6 +41,9 @@
+ #include <fcntl.h>
+ #include <errno.h>
+ #include <signal.h>
++#ifdef __QNXNTO__
++#include <sys/select.h>
++#endif
+ 
+ #include <kit/kit.h>
+ #include "kit-test.h"

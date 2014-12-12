@@ -1,0 +1,22 @@
+$NetBSD$
+
+--- misc/terminfo.src.orig	2011-02-20 20:46:53.000000000 +0000
++++ misc/terminfo.src
+@@ -1498,7 +1498,7 @@ ibmpcx|xenix|ibmx|IBM PC xenix console d
+ # From: Michael Hunter <mphunter@qnx.com> 30 Jul 1996
+ # (removed: <sgr=%?%p1%t\E<%;%p2%t\E[%;%p3%t\E(%;%p4%t\E{%;%p6%t\E<%;,>)
+ qnx|qnx4|qnx console,
+-	daisy, km, mir, msgr, xhpa, xt,
++	daisy, km, mir, msgr, xhpa, xt, bce,
+ 	colors#8, cols#80, it#4, lines#25, ncv#3, pairs#8,
+ 	acsc=O\333a\261j\331k\277l\332m\300n\305o\337q\304s\334t\303u\264v\301w\302x\263,
+ 	bel=^G, blink=\E{, bold=\E<, civis=\Ey0, clear=\EH\EJ,
+@@ -1585,7 +1585,7 @@ qnxt2|qnx 2.15 serial terminal,
+ 
+ # QNX ANSI terminal definition
+ qansi-g|QNX ANSI,
+-	am, eslok, hs, xon,
++	am, eslok, hs, xon, bce,
+ 	colors#8, cols#80, it#8, lines#25, ncv#19, pairs#64, wsl#80,
+ 	acsc=Oa``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
+ 	bel=^G, blink=\E[5m, bold=\E[1m, cbt=\E[Z, civis=\E[?25l,

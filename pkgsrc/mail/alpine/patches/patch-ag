@@ -1,0 +1,17 @@
+$NetBSD$
+
+--- configure.orig	2008-08-21 21:41:04.000000000 -0400
++++ configure
+@@ -33194,6 +33194,12 @@ cat >>confdefs.h <<\_ACEOF
+ _ACEOF
+ 
+     ;;
++  *-*-nto-qnx*)
++    systype="QNX"
++    alpine_path_delim="/"
++    alpine_mode_readonly="(0600)"
++    alpine_c_client_target="nto"
++    ;;
+   *)
+     { { echo "$as_me:$LINENO: error: Unrecognized system: $host" >&5
+ echo "$as_me: error: Unrecognized system: $host" >&2;}

@@ -1,0 +1,25 @@
+$NetBSD: patch-ac,v 1.2 2013/07/19 12:58:20 joerg Exp $
+
+--- Makefile.in.orig	2004-11-05 18:53:48.000000000 -0700
++++ Makefile.in	2004-11-05 20:50:47.000000000 -0700
+@@ -12,9 +12,9 @@
+ INSTALL_PROGRAM	= @INSTALL_PROGRAM@
+ INSTALL_DATA	= @INSTALL_DATA@
+ 
+-X_CFLAGS	= @X_CFLAGS@
++X_CFLAGS	= @X_CFLAGS@ @CPPFLAGS@
+ X_LIBS		= @X_LIBS@
+-X_EXTRA_LIBS	= @X_EXTRA_LIBS@
++X_EXTRA_LIBS	= @X_EXTRA_LIBS@ @LDFLAGS@
+ 
+ IMAKE_CFLAGS	= @IMAKE_CFLAGS@
+ EXTRA_CFLAGS	= @EXTRA_CFLAGS@
+@@ -30,7 +30,7 @@
+ manext		= 1
+ bindir		= $(exec_prefix)/bin
+ libdir		= $(exec_prefix)/lib
+-mandir		= $(prefix)/share/man/man$(manext)
++mandir		= $(prefix)/man/man$(manext)
+ appsdir		= $(libdir)/X11/app-defaults
+ 
+ #### End of system configuration section. ####

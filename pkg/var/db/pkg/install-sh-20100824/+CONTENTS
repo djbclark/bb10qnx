@@ -1,0 +1,5 @@
+@cwd /accounts/devuser/pkg
+@name install-sh-20100824
+@comment $NetBSD: PLIST,v 1.1.1.1 2006/07/17 14:19:01 jlam Exp $
+bin/install-sh
+@comment MD5:5240c7debae5773b21788bad8c044ae6

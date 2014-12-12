@@ -1,0 +1,28 @@
+$NetBSD$
+
+--- lib/roken/version-script.map.orig	2010-09-13 07:23:34.000000000 +0000
++++ lib/roken/version-script.map
+@@ -53,6 +53,7 @@ HEIMDAL_ROKEN_1.0 {
+ 		rk_dumpdata;
+ 		rk_ecalloc;
+ 		rk_emalloc;
++		rk_endusershell;
+ 		rk_eread;
+ 		rk_erealloc;
+ 		rk_esetenv;
+@@ -71,6 +72,7 @@ HEIMDAL_ROKEN_1.0 {
+ 		rk_getipnodebyname;
+ 		rk_getnameinfo;
+ 		rk_getprogname;
++		rk_getusershell;
+ 		rk_glob;
+ 		rk_globfree;
+ 		rk_hex_decode;
+@@ -90,6 +92,7 @@ HEIMDAL_ROKEN_1.0 {
+ 		rk_strerror;
+ 		rk_strerror_r;
+ 		rk_setprogname;
++		rk_setusershell;
+ 		rk_simple_execle;
+ 		rk_simple_execlp;
+ 		rk_simple_execve;

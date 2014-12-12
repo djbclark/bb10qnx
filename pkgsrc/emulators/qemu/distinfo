@@ -1,0 +1,18 @@
+$NetBSD: distinfo,v 1.85 2013/07/09 17:00:58 tsutsui Exp $
+
+SHA1 (qemu-1.5.1.tar.bz2) = 1e1339dffb01c98f33ec8451266cee1adf3b41be
+RMD160 (qemu-1.5.1.tar.bz2) = 22cdf2860f0fdb2907c57d33ea82db9bb0139c59
+Size (qemu-1.5.1.tar.bz2) = 11931754 bytes
+SHA1 (patch-ef) = 871ccf29463dec1bd56d7f7808248c5b1af4d4d6
+SHA1 (patch-et) = bc96fbe2869042f9a77716cfe3c5342262e7b489
+SHA1 (patch-hw_display_omap__dss.c) = af89754a9a078a5b52240473d85351bd447623c0
+SHA1 (patch-hw_net_etraxfs__eth.c) = a6ac71e3a2a605bbabc52792db1d063dcb7764c2
+SHA1 (patch-hw_net_xilinx__axienet.c) = 02461c2cd2985c352626e46ba93844606783460e
+SHA1 (patch-include_qemu_thread-posix.h) = 7722055df516a8bcd01d36ea0474d2bbfbe27eaa
+SHA1 (patch-ioport.c) = a1bb22c6e22c0b0f3acacfa2023f7b45463e0041
+SHA1 (patch-memory.c) = b18fa7273a52e387943062e03c90501c4d9b30f4
+SHA1 (patch-net_tap-bsd.c) = 8f97df5f23212d6b748786a4ab417520abc6b066
+SHA1 (patch-slirp_tcp__subr.c) = 430157ea8a92fe1d6fc4f1f22ea5530641315fe1
+SHA1 (patch-user-exec.c) = 41f8bfdd86cbaa974ceb91571a2b2293b9df5153
+SHA1 (patch-util_hbitmap.c) = 372fcbad5272205cd354bc7760ead77e017b07d1
+SHA1 (patch-util_qemu-thread-posix.c) = 0f3ce555b4d1328a869a374bf58eee3bda320cc2

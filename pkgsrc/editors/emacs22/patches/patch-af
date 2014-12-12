@@ -1,0 +1,58 @@
+$NetBSD: patch-af,v 1.3 2013/07/05 13:39:05 ryoon Exp $
+
+* Build fix for newer versions of "libpng".
+* Build fix for 5.0 version of giflib.
+
+--- src/image.c.orig	2008-08-25 22:18:33.000000000 +0000
++++ src/image.c
+@@ -6328,11 +6328,7 @@ png_image_p (object)
+ 
+ #ifdef HAVE_PNG
+ 
+-#if defined HAVE_LIBPNG_PNG_H
+-# include <libpng/png.h>
+-#else
+ # include <png.h>
+-#endif
+ 
+ #ifdef HAVE_NTGUI
+ /* PNG library details.  */
+@@ -6427,7 +6423,11 @@ my_png_error (png_ptr, msg)
+ {
+   xassert (png_ptr != NULL);
+   image_error ("PNG error: %s", build_string (msg), Qnil);
++#if (PNG_LIBPNG_VER < 10500)
+   longjmp (png_ptr->jmpbuf, 1);
++#else
++  png_longjmp (png_ptr, 1);
++#endif
+ }
+ 
+ 
+@@ -6603,7 +6603,7 @@ png_load (f, img)
+ 
+   /* Set error jump-back.  We come back here when the PNG library
+      detects an error.  */
+-  if (setjmp (png_ptr->jmpbuf))
++  if (setjmp (png_jmpbuf(png_ptr)))
+     {
+     error:
+       if (png_ptr)
+@@ -8108,7 +8108,7 @@ gif_load (f, img)
+ 
+       /* Open the GIF file.  Casting return value avoids a GCC warning
+ 	 on W32.  */
+-      gif = (GifFileType *)fn_DGifOpenFileName (SDATA (file));
++      gif = (GifFileType *)fn_DGifOpenFileName (SDATA (file), NULL);
+       if (gif == NULL)
+ 	{
+ 	  image_error ("Cannot open `%s'", file, Qnil);
+@@ -8125,7 +8125,7 @@ gif_load (f, img)
+       memsrc.index = 0;
+ 
+       /* Casting return value avoids a GCC warning on W32.  */
+-      gif = (GifFileType *)fn_DGifOpen(&memsrc, gif_read_from_memory);
++      gif = (GifFileType *)fn_DGifOpen(&memsrc, gif_read_from_memory, NULL);
+       if (!gif)
+ 	{
+ 	  image_error ("Cannot open memory source `%s'", img->spec, Qnil);
